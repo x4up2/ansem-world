@@ -176,7 +176,7 @@ export function LandingPage() {
       <section className="how-section" id="how">
         <div className="section-heading compact"><div><p className="eyebrow">PRIVACY-FIRST</p><h2>One signature. Zero transactions.</h2></div></div>
         <div className="steps">
-          <Step number="01" title="Connect" text="Use a compatible Solana wallet. The site never sees your private key or seed phrase." />
+          <Step number="01" title="Connect" text="Use Phantom Wallet. More Solana wallets may be supported later. The site never sees your private key or seed phrase." />
           <Step number="02" title="Prove" text="Sign a human-readable message and let the server verify that the wallet holds $ANSEM." />
           <Step number="03" title="Join" text="Choose a country. Your verified wallet increases that country’s light; no precise location is requested or displayed." />
         </div>
