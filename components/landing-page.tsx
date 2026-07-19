@@ -130,6 +130,10 @@ export function LandingPage() {
             <button className="primary-button" type="button" onClick={() => setClaimOpen(true)}>JOIN THE HERD</button>
             <a className="secondary-button" href="#map">EXPLORE THE MAP ↓</a>
           </div>
+          <p className="signature-reassurance">
+            <strong>MESSAGE SIGNATURE ONLY</strong>
+            <span>— no transaction or token approval.</span>
+          </p>
         </div>
         <div className="hero-bull" aria-hidden="true">
           <div className="bull-aura" />
