@@ -116,7 +116,12 @@ export function LandingPage() {
           <a href="#map">MAP</a>
           <a href="#how">HOW IT WORKS</a>
           <a href={`https://solscan.io/token/${ANSEM_MINT}`} target="_blank" rel="noreferrer">TOKEN ↗</a>
-          <button className="nav-claim" type="button" onClick={() => setClaimOpen(true)}>JOIN THE HERD</button>
+          <div className="nav-claim-wrap">
+            <button className="nav-claim" type="button" onClick={() => setClaimOpen(true)}>
+              JOIN THE HERD
+            </button>
+            <small>MESSAGE SIGNATURE ONLY</small>
+          </div>
         </nav>
       </header>
 

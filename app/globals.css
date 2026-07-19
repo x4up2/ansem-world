@@ -155,3 +155,19 @@ footer { padding: 35px 5vw; display: flex; align-items: center; justify-content:
 .signature-reassurance span {
   color: rgba(210, 255, 221, 0.62);
 }
+
+
+.nav-claim-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.nav-claim-wrap small {
+  color: rgba(210, 255, 221, 0.58);
+  font-size: 0.52rem;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
