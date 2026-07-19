@@ -9,7 +9,8 @@
     "lint": "npm run typecheck",
     "snapshot:holders": "node --env-file-if-exists=.env.local --import tsx scripts/update-holder-snapshot.ts",
     "typecheck": "tsc --noEmit",
-    "preview": "python3 -m http.server 8000 --directory preview"
+    "preview": "python3 -m http.server 8000 --directory preview",
+    "cleanup:nonces": "node --env-file-if-exists=.env.local --import tsx scripts/cleanup-nonces.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.110.7",

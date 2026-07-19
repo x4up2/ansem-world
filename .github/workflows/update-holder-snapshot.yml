@@ -40,3 +40,6 @@ jobs:
 
       - name: Update holder snapshot
         run: npm run snapshot:holders
+
+      - name: Clean expired claim nonces
+        run: npm run cleanup:nonces
