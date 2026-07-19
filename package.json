@@ -1,0 +1,36 @@
+{
+  "name": "ansem-world",
+  "version": "0.1.2",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "npm run typecheck",
+    "snapshot:holders": "node --env-file-if-exists=.env.local --import tsx scripts/update-holder-snapshot.ts",
+    "typecheck": "tsc --noEmit",
+    "preview": "python3 -m http.server 8000 --directory preview"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.110.7",
+    "@turf/area": "^7.3.5",
+    "@turf/boolean-point-in-polygon": "^7.3.5",
+    "@turf/center-of-mass": "^7.3.5",
+    "@turf/helpers": "^7.3.5",
+    "@turf/point-on-feature": "^7.3.5",
+    "bs58": "^6.0.0",
+    "countries-list": "^3.4.1",
+    "maplibre-gl": "5.24.0",
+    "next": "16.2.10",
+    "react": "19.2.7",
+    "react-dom": "19.2.7",
+    "tweetnacl": "^1.0.3"
+  },
+  "devDependencies": {
+    "@types/node": "24.10.1",
+    "@types/react": "19.2.17",
+    "@types/react-dom": "19.2.3",
+    "tsx": "^4.20.6",
+    "typescript": "5.9.3"
+  }
+}

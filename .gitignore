@@ -1,0 +1,10 @@
+node_modules
+.next
+.env
+.env.local
+*.log
+holders-snapshot.json
+
+# Private on-chain snapshots
+holders-snapshot.json
+*.backup*
