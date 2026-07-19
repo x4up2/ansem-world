@@ -171,3 +171,27 @@ footer { padding: 35px 5vw; display: flex; align-items: center; justify-content:
   letter-spacing: 0.08em;
   white-space: nowrap;
 }
+
+
+.map-building-note {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin: 1rem 0;
+  padding: 0.9rem 1rem;
+  border: 1px solid rgba(34, 255, 98, 0.18);
+  background: rgba(34, 255, 98, 0.045);
+  color: rgba(210, 255, 221, 0.72);
+  font-size: 0.76rem;
+  line-height: 1.55;
+}
+
+.map-building-note strong {
+  color: #d2ffdd;
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+}
+
+.map-building-note span {
+  color: rgba(210, 255, 221, 0.7);
+}

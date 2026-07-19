@@ -289,6 +289,15 @@ export function ClaimModal({
           </span>
         </div>
 
+        <div className="map-building-note">
+          <strong>WHY CONNECT?</strong>
+          <span>
+            Solana shows which wallets hold $ANSEM, but not their country.
+            This map can only grow when holders voluntarily verify their
+            wallet and select their country.
+          </span>
+        </div>
+
         <button
           className="primary-button full"
           type="button"
