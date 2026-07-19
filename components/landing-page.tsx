@@ -125,7 +125,7 @@ export function LandingPage() {
         <div className="hero-copy">
           <p className="eyebrow"><span className="live-dot" /> LIVE ON SOLANA</p>
           <h1><span>THE GLOBAL</span><br />$ANSEM HERD</h1>
-          <p className="hero-subtitle">Track the herd. Claim your place.</p>
+          <p className="hero-subtitle">Track the herd. Put your country on the map.</p>
           <div className="hero-actions">
             <button className="primary-button" type="button" onClick={() => setClaimOpen(true)}>JOIN THE HERD</button>
             <a className="secondary-button" href="#map">EXPLORE THE MAP ↓</a>
@@ -136,7 +136,7 @@ export function LandingPage() {
           <Image src="/ansem-bull.png" alt="" width={420} height={420} priority />
         </div>
         <div className="contract-strip">
-          <span>OFFICIAL MINT</span>
+          <span>OFFICIAL $ANSEM TOKEN ADDRESS</span>
           <code>{ANSEM_MINT}</code>
           <button type="button" onClick={() => navigator.clipboard.writeText(ANSEM_MINT)}>COPY</button>
         </div>

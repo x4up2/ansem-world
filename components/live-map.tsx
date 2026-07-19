@@ -599,7 +599,7 @@ export function LiveMap() {
         {dataError
           ? "CLAIM DATA UNAVAILABLE"
           : summary.totalClaims === 0
-            ? "NO VERIFIED CLAIMS YET"
+            ? "NO VERIFIED HOLDERS MAPPED YET"
             : `${summary.countries} ${
                 summary.countries === 1
                   ? "COUNTRY"
