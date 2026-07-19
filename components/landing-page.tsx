@@ -139,6 +139,12 @@ export function LandingPage() {
             <strong>MESSAGE SIGNATURE ONLY</strong>
             <span>— no transaction or token approval.</span>
           </p>
+
+          <p className="community-map-explanation">
+            Solana can identify $ANSEM holders, but not their country.
+            The community map can only grow when holders voluntarily
+            verify their wallet and select their country.
+          </p>
         </div>
         <div className="hero-bull" aria-hidden="true">
           <div className="bull-aura" />

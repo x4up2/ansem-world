@@ -195,3 +195,11 @@ footer { padding: 35px 5vw; display: flex; align-items: center; justify-content:
 .map-building-note span {
   color: rgba(210, 255, 221, 0.7);
 }
+
+.community-map-explanation {
+  max-width: 590px;
+  margin: 0.75rem 0 0;
+  color: rgba(210, 255, 221, 0.7);
+  font-size: 0.82rem;
+  line-height: 1.55;
+}
