@@ -4,9 +4,8 @@ on:
   workflow_dispatch:
 
   schedule:
-    # Every hour, at minute 17 UTC.
-    - cron: "17 * * * *"
-
+    # Every hour, at minute 47 UTC.
+    - cron: "47 * * * *"
 permissions:
   contents: read
 
