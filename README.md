@@ -1,81 +1,164 @@
-# ANSEM WORLD — v4
+# ANSEM WORLD
 
-Visual and technical MVP for a privacy-first global community map for `$ANSEM` holders on Solana.
+ANSEM WORLD is an open-source community map for `$ANSEM` holders on Solana.
 
-## What already works
+The blockchain can identify wallets holding `$ANSEM`, but it cannot determine their country. Holders can therefore voluntarily verify their wallet and select their country to help build the map.
 
-- responsive dark landing page using the supplied Black Bull artwork;
-- MapLibre world map with green points, glow, clustering and country popups;
-- live-looking statistics and clear separation between total holders and mapped holders;
-- `Claim your dot` flow with Phantom-compatible wallet connection and message signing;
-- prototype API routes;
-- Helius `getProgramAccountsV2` snapshot script with pagination and aggregation by wallet.
+**Live site:** https://ansem-world.vercel.app/
 
-The map currently uses deterministic demonstration points. The interface explicitly labels them as demo data.
+## Security
 
-## Run locally
+ANSEM WORLD does not create or request any blockchain transaction.
 
-Requires Node.js 20.9 or later.
+- No token approval
+- No spending permission
+- No transfer
+- No fee
+- No seed phrase or private key request
+- No wallet download or browser extension installation
+
+Phantom is only asked to sign a one-time, human-readable message. The signature proves that the visitor controls the public wallet address.
+
+The signature cannot authorize a transaction, move funds or grant access to tokens.
+
+The signed message includes:
+
+- the public wallet address;
+- the selected country;
+- a unique nonce;
+- an issue time;
+- an expiration time.
+
+The server then verifies the signature and checks whether the wallet currently holds `$ANSEM`.
+
+## Privacy
+
+The country is self-declared.
+
+ANSEM WORLD does not attempt to infer nationality or location from:
+
+- an IP address;
+- GPS data;
+- wallet activity;
+- blockchain transactions.
+
+The application stores:
+
+- the public Solana wallet address;
+- the selected country;
+- timestamps and technical data required to verify and manage the claim.
+
+The public map exposes only aggregated country totals. It does not publish the list of wallet addresses associated with each country.
+
+## How it works
+
+1. Select a country.
+2. Connect Phantom.
+3. Read and sign the verification message.
+4. The server verifies wallet ownership.
+5. The server checks the `$ANSEM` balance.
+6. The country total is updated.
+
+One wallet can have one active country claim.
+
+## Token
+
+**Official `$ANSEM` mint address:**
+
+```text
+9cRCn9rGT8V2imeM2BaKs13yhMEais3ruM3rPvTGpump
+```
+
+The application uses the Solana Token-2022 program.
+
+## Holder statistics
+
+The global holder count is generated from Solana blockchain data through Helius.
+
+A GitHub Actions workflow updates the holder snapshot every hour. Country claim statistics are stored in Supabase and updated independently.
+
+## Technology
+
+- Next.js
+- TypeScript
+- React
+- MapLibre GL
+- Solana
+- Phantom
+- Helius
+- Supabase
+- Vercel
+- GitHub Actions
+
+## Local development
+
+Requirements:
+
+- Node.js 22 or later
+- npm
+- a Helius API key
+- a Supabase project
+
+Clone and install the project:
 
 ```bash
+git clone https://github.com/x4up2/ansem-world.git
+cd ansem-world
 npm install
 cp .env.example .env.local
+```
+
+Complete `.env.local` with your own credentials:
+
+```env
+HELIUS_API_KEY=
+SUPABASE_URL=
+SUPABASE_SECRET_KEY=
+
+NEXT_PUBLIC_ANSEM_MINT=9cRCn9rGT8V2imeM2BaKs13yhMEais3ruM3rPvTGpump
+NEXT_PUBLIC_MAP_STYLE=https://tiles.openfreemap.org/styles/dark
+```
+
+Start the development server:
+
+```bash
 npm run dev
 ```
 
-On macOS, see `GUIDE_INSTALLATION_FR.md`; `START-PREVIEW.command` opens the static preview and `START-DEV.command` launches the full development app.
+Run a production build:
 
-Open `http://localhost:3000`.
+```bash
+npm run build
+```
 
-## Generate a real holder snapshot
-
-1. Create a free Helius API key.
-2. Put it in `.env.local`.
-3. Run:
+Update the holder snapshot manually:
 
 ```bash
 npm run snapshot:holders
 ```
 
-The script writes `holders-snapshot.json`. It queries SPL Token accounts filtered by the ANSEM mint, paginates until the cursor is empty, then aggregates token accounts by wallet owner.
+## Environment-variable security
 
-## Production work still required
+`HELIUS_API_KEY` and `SUPABASE_SECRET_KEY` are server-only credentials and must never be committed to Git.
 
-1. Verify wallet signatures server-side with Ed25519.
-2. Check the wallet's current ANSEM balance server-side before accepting a claim.
-3. Add one-time nonces with expiry to prevent replay attacks.
-4. Add PostgreSQL/Supabase tables for holders, claims and consent history.
-5. Replace demo map points and statistics with database-backed data.
-6. Run an incremental holder sync using `changedSinceSlot`, plus periodic full reconciliation.
-7. Add rate limiting, abuse controls, deletion/export endpoints and a privacy page.
-8. Deploy the Next.js frontend and a long-running worker separately.
+Variables beginning with `NEXT_PUBLIC_` are intentionally included in the browser bundle and must not contain secrets.
 
-## Suggested deployment
+The real `.env.local` file is excluded by `.gitignore`.
 
-- Frontend/API: Vercel
-- Database: Supabase Postgres
-- Holder worker: Railway, Fly.io or Render
-- Map tiles: OpenFreeMap dark style
-- DNS/domain: Cloudflare
+## Responsible disclosure
 
-## Privacy model
+Please do not publicly disclose sensitive security findings before they have been reviewed.
 
-- Country is voluntarily self-declared.
-- No precise location is collected.
-- Public map coordinates are randomly offset inside the selected country or region.
-- Wallet addresses should not be exposed by the public API.
-- A holder can delete their claim.
+To report a vulnerability, open a GitHub issue containing only non-sensitive information or contact the repository owner privately.
 
-## Map reliability fix (v3)
+## Disclaimer
 
-The interactive map now uses a bundled, simplified Natural Earth country dataset instead of downloading a third-party basemap at runtime. This makes the MVP work even if a tile provider, DNS filter or content blocker is unavailable. The MapLibre error state is also shown directly in the page instead of silently leaving a blank panel.
+This is an independent community project. It is not an official wallet, exchange or custody service.
 
+The project is open source, but it has not undergone a formal third-party security audit.
 
-## v4 map rendering fix
+Always read wallet messages carefully before signing them.
 
-The MapLibre stylesheet is loaded before the project stylesheet, and the map container now has an explicit 100% width and height. This fixes a zero-height map container in the Next.js development build.
+## License
 
-
-## v4.1 fix
-
-The holder snapshot script now runs inside an async `main()` function so it works when `tsx` transpiles the script as CommonJS.
+No license has currently been selected. Unless a license is added, the source code remains publicly viewable but is not automatically licensed for reuse.
