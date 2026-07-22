@@ -135,7 +135,6 @@ export function LandingPage() {
       <section className="hero" id="top">
         <div className="hero-grid" />
         <div className="hero-copy">
-          <p className="eyebrow"><span className="live-dot" /> LIVE ON SOLANA</p>
           <h1><span>THE GLOBAL</span> $ANSEM HERD</h1>
           <p className="hero-subtitle">Track the herd. Put your country on the map.</p>
           <div className="hero-actions">
@@ -162,7 +161,7 @@ export function LandingPage() {
 
       <section className="map-section" id="map">
         <div className="section-heading">
-          <div><p className="eyebrow">GLOBAL COMMUNITY</p><h2>One country. One light.</h2></div>
+          <div><p className="eyebrow">COMMUNITY MAP</p><h2>One country. One light.</h2></div>
           <p>Each light groups verified $ANSEM holders by country. The larger the light, the larger the local herd.</p>
         </div>
         <LiveMap />
