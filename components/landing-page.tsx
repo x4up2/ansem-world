@@ -150,6 +150,10 @@ export function LandingPage() {
             PUBLIC SOURCE CODE — REVIEW ON GITHUB ↗
           </a>
 
+          <p className="project-disclaimer">
+            Independent community project — not affiliated with or endorsed by the $ANSEM team.
+          </p>
+
           <p className="community-map-explanation">
             Solana can identify $ANSEM holders, but not their country.
             The community map can only grow when holders voluntarily

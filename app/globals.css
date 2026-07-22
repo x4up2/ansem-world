@@ -243,3 +243,12 @@ footer { padding: 35px 5vw; display: flex; align-items: center; justify-content:
   outline: 2px solid currentColor;
   outline-offset: 4px;
 }
+
+.project-disclaimer {
+  max-width: 620px;
+  margin: 0.8rem 0 0;
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 0.76rem;
+  line-height: 1.5;
+  letter-spacing: 0.025em;
+}
