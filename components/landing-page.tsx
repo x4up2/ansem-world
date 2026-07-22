@@ -127,6 +127,7 @@ export function LandingPage() {
 
         <nav>
           <a href="#map">MAP</a>
+          <a href="#stats">STATS</a>
           <a href="#how">HOW IT WORKS</a>
           <a href={`https://solscan.io/token/${ANSEM_MINT}`} target="_blank" rel="noreferrer">TOKEN ↗</a>
         </nav>
@@ -161,14 +162,14 @@ export function LandingPage() {
 
       <section className="map-section" id="map">
         <div className="section-heading">
-          <div><p className="eyebrow">COMMUNITY MAP</p><h2>One country. One light.</h2></div>
+          <div><h2>One country. One light.</h2></div>
           <p>Each light groups verified $ANSEM holders by country. The larger the light, the larger the local herd.</p>
         </div>
         <LiveMap />
       </section>
 
 
-      <section className="stats-grid" aria-label="Community statistics">
+      <section className="stats-grid" id="stats" aria-label="Community statistics">
         <Stat
           value={stats.totalHolders.toLocaleString("en-US")}
           label="TOTAL HOLDERS"

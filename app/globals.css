@@ -453,3 +453,41 @@ footer { padding: 35px 5vw; display: flex; align-items: center; justify-content:
     display: flex;
   }
 }
+
+/* Final desktop hero compaction */
+@media (min-width: 901px) {
+  .hero {
+    min-height: 330px;
+    height: 330px;
+    max-height: 330px;
+    padding: 78px 7vw 28px;
+  }
+
+  .hero h1 {
+    font-size: clamp(36px, 4.2vw, 60px);
+  }
+
+  .hero-subtitle {
+    margin: 10px 0 14px;
+  }
+
+  .signature-reassurance {
+    margin-top: 10px;
+  }
+
+  .hero-bull {
+    width: min(18vw, 230px);
+  }
+
+  .map-section {
+    padding-top: 18px;
+  }
+
+  .map-section .section-heading {
+    margin-bottom: 18px;
+  }
+}
+
+#stats {
+  scroll-margin-top: 82px;
+}
