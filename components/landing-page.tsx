@@ -112,6 +112,19 @@ export function LandingPage() {
           <Image src="/ansem-bull.png" alt="Black Bull" width={42} height={42} priority />
           <span>ANSEM <strong>WORLD</strong></span>
         </a>
+
+        <div className="header-contract" aria-label="Official ANSEM token address">
+          <span>OFFICIAL $ANSEM TOKEN ADDRESS</span>
+          <code>{ANSEM_MINT}</code>
+          <button
+            type="button"
+            onClick={() => navigator.clipboard.writeText(ANSEM_MINT)}
+            aria-label="Copy the official ANSEM token address"
+          >
+            COPY
+          </button>
+        </div>
+
         <nav>
           <a href="#map">MAP</a>
           <a href="#how">HOW IT WORKS</a>
@@ -129,7 +142,7 @@ export function LandingPage() {
         <div className="hero-grid" />
         <div className="hero-copy">
           <p className="eyebrow"><span className="live-dot" /> LIVE ON SOLANA</p>
-          <h1><span>THE GLOBAL</span><br />$ANSEM HERD</h1>
+          <h1><span>THE GLOBAL</span> $ANSEM HERD</h1>
           <p className="hero-subtitle">Track the herd. Put your country on the map.</p>
           <div className="hero-actions">
             <button className="primary-button" type="button" onClick={() => setClaimOpen(true)}>JOIN THE HERD</button>
@@ -151,12 +164,16 @@ export function LandingPage() {
           <div className="bull-aura" />
           <Image src="/ansem-bull.png" alt="" width={420} height={420} priority />
         </div>
-        <div className="contract-strip">
-          <span>OFFICIAL $ANSEM TOKEN ADDRESS</span>
-          <code>{ANSEM_MINT}</code>
-          <button type="button" onClick={() => navigator.clipboard.writeText(ANSEM_MINT)}>COPY</button>
-        </div>
       </section>
+
+      <section className="map-section" id="map">
+        <div className="section-heading">
+          <div><p className="eyebrow">GLOBAL COMMUNITY</p><h2>One country. One light.</h2></div>
+          <p>Each light groups verified $ANSEM holders by country. The larger the light, the larger the local herd.</p>
+        </div>
+        <LiveMap />
+      </section>
+
 
       <section className="stats-grid" aria-label="Community statistics">
         <Stat
@@ -179,14 +196,6 @@ export function LandingPage() {
           label="LAST 24 HOURS"
           note="new verified bulls"
         />
-      </section>
-
-      <section className="map-section" id="map">
-        <div className="section-heading">
-          <div><p className="eyebrow">GLOBAL COMMUNITY</p><h2>One country. One light.</h2></div>
-          <p>Each light groups verified $ANSEM holders by country. The larger the light, the larger the local herd.</p>
-        </div>
-        <LiveMap />
       </section>
 
       <section className="how-section" id="how">
