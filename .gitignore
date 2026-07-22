@@ -8,3 +8,6 @@ holders-snapshot.json
 # Private on-chain snapshots
 holders-snapshot.json
 *.backup*
+.DS_Store
+**/.DS_Store
+START-DEV.command
