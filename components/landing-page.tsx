@@ -127,7 +127,6 @@ export function LandingPage() {
 
         <nav>
           <a href="#map">MAP</a>
-          <a href="#stats">STATS</a>
           <a href="#how">HOW IT WORKS</a>
           <a href={`https://solscan.io/token/${ANSEM_MINT}`} target="_blank" rel="noreferrer">TOKEN ↗</a>
         </nav>
@@ -165,31 +164,38 @@ export function LandingPage() {
           <div><h2>One country. One light.</h2></div>
           <p>Each light groups verified $ANSEM holders by country. The larger the light, the larger the local herd.</p>
         </div>
-        <LiveMap />
-      </section>
+        <div className="map-stats-layout">
+          <div className="map-column">
+            <LiveMap />
+          </div>
 
-
-      <section className="stats-grid" id="stats" aria-label="Community statistics">
-        <Stat
-          value={stats.totalHolders.toLocaleString("en-US")}
-          label="TOTAL HOLDERS"
-          note={formatSnapshotNote(stats.generatedAt)}
-        />
-        <Stat
-          value={stats.mappedHolders.toLocaleString("en-US")}
-          label="MAPPED BULLS"
-          note="auto-refresh · 10s"
-        />
-        <Stat
-          value={String(stats.countries)}
-          label="COUNTRIES"
-          note="verified communities"
-        />
-        <Stat
-          value={stats.last24h.toLocaleString("en-US")}
-          label="LAST 24 HOURS"
-          note="new verified bulls"
-        />
+          <aside
+            className="stats-grid stats-sidebar"
+            id="stats"
+            aria-label="Community statistics"
+          >
+          <Stat
+            value={stats.totalHolders.toLocaleString("en-US")}
+            label="TOTAL HOLDERS"
+            note={formatSnapshotNote(stats.generatedAt)}
+          />
+          <Stat
+            value={stats.mappedHolders.toLocaleString("en-US")}
+            label="MAPPED BULLS"
+            note="auto-refresh · 10s"
+          />
+          <Stat
+            value={String(stats.countries)}
+            label="COUNTRIES"
+            note="verified communities"
+          />
+          <Stat
+            value={stats.last24h.toLocaleString("en-US")}
+            label="LAST 24 HOURS"
+            note="new verified bulls"
+          />
+          </aside>
+        </div>
       </section>
 
       <section className="how-section" id="how">
