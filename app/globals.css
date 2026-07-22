@@ -291,3 +291,30 @@ footer { padding: 35px 5vw; display: flex; align-items: center; justify-content:
     width: 100%;
   }
 }
+
+.transparency-section {
+  padding: 42px 5vw 50px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.transparency-section .trust-panel {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.transparency-copy {
+  flex: 1 1 360px;
+}
+
+.transparency-heading {
+  margin: 0 0 0.45rem;
+  color: var(--green, #72ff65);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+.transparency-section .project-disclaimer {
+  max-width: 610px;
+  margin: 0;
+}

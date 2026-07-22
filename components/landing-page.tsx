@@ -146,21 +146,6 @@ export function LandingPage() {
             verify their wallet and select their country.
           </p>
 
-          <div className="trust-panel" aria-label="Project transparency">
-            <p className="project-disclaimer">
-              Independent community project — not affiliated with or endorsed by the $ANSEM team.
-            </p>
-
-            <a
-              className="github-source-link"
-              href="https://github.com/x4up2/ansem-world"
-              target="_blank"
-              rel="noreferrer"
-              aria-label="Review the ANSEM WORLD public source code on GitHub"
-            >
-              PUBLIC SOURCE CODE — REVIEW ON GITHUB ↗
-            </a>
-          </div>
         </div>
         <div className="hero-bull" aria-hidden="true">
           <div className="bull-aura" />
@@ -210,6 +195,36 @@ export function LandingPage() {
           <Step number="01" title="Connect" text="Use Phantom Wallet. More Solana wallets may be supported later. The site never sees your private key or seed phrase." />
           <Step number="02" title="Prove" text="Sign a human-readable message and let the server verify that the wallet holds $ANSEM." />
           <Step number="03" title="Join" text="Choose a country. Your verified wallet increases that country’s light; no precise location is requested or displayed." />
+        </div>
+      </section>
+
+      <section
+        className="transparency-section"
+        aria-labelledby="project-transparency-title"
+      >
+        <div className="trust-panel">
+          <div className="transparency-copy">
+            <p
+              className="transparency-heading"
+              id="project-transparency-title"
+            >
+              PROJECT TRANSPARENCY
+            </p>
+
+            <p className="project-disclaimer">
+              Independent community project — not affiliated with or endorsed by the $ANSEM team.
+            </p>
+          </div>
+
+          <a
+            className="github-source-link"
+            href="https://github.com/x4up2/ansem-world"
+            target="_blank"
+            rel="noreferrer"
+            aria-label="Review the ANSEM WORLD public source code on GitHub"
+          >
+            PUBLIC SOURCE CODE — REVIEW ON GITHUB ↗
+          </a>
         </div>
       </section>
 
