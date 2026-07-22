@@ -283,9 +283,10 @@ export function ClaimModal({
           <strong>Privacy by design</strong>
 
           <span>
-            Your public point will be randomly
-            positioned inside {selectedCountry}.
-            No precise location is requested or displayed.
+            One shared point is displayed at the center of{" "}
+            {selectedCountry}. Its size is proportional to the number of
+            verified $ANSEM holders in that country. No precise location is
+            requested or displayed.
           </span>
         </div>
 
