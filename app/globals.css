@@ -491,3 +491,142 @@ footer { padding: 35px 5vw; display: flex; align-items: center; justify-content:
 #stats {
   scroll-margin-top: 82px;
 }
+
+/* Map with statistics sidebar */
+.map-stats-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 275px;
+  gap: 18px;
+  max-width: 1600px;
+  margin: 0 auto;
+  align-items: stretch;
+}
+
+.map-column {
+  min-width: 0;
+}
+
+.map-column .map-shell {
+  width: 100%;
+  max-width: none;
+  height: min(70vh, 720px);
+  min-height: 520px;
+  margin: 0;
+}
+
+.stats-sidebar {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  min-width: 265px;
+  height: min(70vh, 720px);
+  min-height: 520px;
+  padding: 0;
+  border: 1px solid rgba(80, 255, 126, 0.19);
+  background: rgba(80, 255, 126, 0.13);
+}
+
+.stats-sidebar > * {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  justify-content: center;
+  padding: 18px;
+  border: 0 !important;
+  background: #070a07;
+}
+
+/* More compact How it works section */
+@media (min-width: 901px) {
+  .how-section {
+    padding-top: 56px;
+    padding-bottom: 64px;
+  }
+
+  .how-section .section-heading {
+    margin-bottom: 28px;
+  }
+
+  .how-section .steps {
+    gap: 16px;
+  }
+
+  .how-section .steps > * {
+    padding-top: 22px;
+    padding-bottom: 22px;
+  }
+}
+
+@media (max-width: 900px) {
+  .map-stats-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .stats-sidebar {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: auto;
+    width: 100%;
+    min-width: 0;
+    height: auto;
+    min-height: 0;
+  }
+
+  .stats-sidebar > * {
+    min-height: 125px;
+  }
+}
+
+@media (max-width: 520px) {
+  .stats-sidebar {
+    grid-template-columns: 1fr;
+  }
+
+  .stats-sidebar > * {
+    min-height: 105px;
+  }
+}
+
+/* Final compact How it works layout */
+@media (min-width: 901px) {
+  .how-section {
+    padding-top: 34px;
+    padding-bottom: 40px;
+  }
+
+  .how-section .section-heading {
+    margin-bottom: 16px;
+  }
+
+  .how-section .section-heading h2 {
+    margin: 0;
+    font-size: clamp(28px, 3vw, 40px);
+    line-height: 1;
+  }
+
+  .how-section .eyebrow {
+    margin-bottom: 7px;
+  }
+
+  .how-section .steps {
+    gap: 10px;
+  }
+
+  .how-section .steps > * {
+    min-height: 0;
+    padding: 15px 18px 17px;
+  }
+
+  .how-section .steps h3 {
+    margin-top: 7px;
+    margin-bottom: 5px;
+    font-size: 1rem;
+    line-height: 1.15;
+  }
+
+  .how-section .steps p {
+    margin: 0;
+    font-size: 0.84rem;
+    line-height: 1.4;
+  }
+}
