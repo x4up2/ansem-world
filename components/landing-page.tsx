@@ -140,25 +140,27 @@ export function LandingPage() {
             <span>— no transaction or token approval.</span>
           </p>
 
-          <a
-            className="github-source-link"
-            href="https://github.com/x4up2/ansem-world"
-            target="_blank"
-            rel="noreferrer"
-            aria-label="Review the ANSEM WORLD public source code on GitHub"
-          >
-            PUBLIC SOURCE CODE — REVIEW ON GITHUB ↗
-          </a>
-
-          <p className="project-disclaimer">
-            Independent community project — not affiliated with or endorsed by the $ANSEM team.
-          </p>
-
           <p className="community-map-explanation">
             Solana can identify $ANSEM holders, but not their country.
             The community map can only grow when holders voluntarily
             verify their wallet and select their country.
           </p>
+
+          <div className="trust-panel" aria-label="Project transparency">
+            <p className="project-disclaimer">
+              Independent community project — not affiliated with or endorsed by the $ANSEM team.
+            </p>
+
+            <a
+              className="github-source-link"
+              href="https://github.com/x4up2/ansem-world"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Review the ANSEM WORLD public source code on GitHub"
+            >
+              PUBLIC SOURCE CODE — REVIEW ON GITHUB ↗
+            </a>
+          </div>
         </div>
         <div className="hero-bull" aria-hidden="true">
           <div className="bull-aura" />
