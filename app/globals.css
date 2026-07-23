@@ -630,3 +630,17 @@ footer { padding: 35px 5vw; display: flex; align-items: center; justify-content:
     line-height: 1.4;
   }
 }
+
+/* iPad / tablet fix: give the map + stats block a bit more height */
+@media (min-width: 901px) and (max-width: 1180px) {
+  .map-column .map-shell,
+  .stats-sidebar {
+    height: min(76vh, 820px);
+    min-height: 580px;
+  }
+
+  .stats-sidebar {
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+}
