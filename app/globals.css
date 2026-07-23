@@ -644,3 +644,52 @@ footer { padding: 35px 5vw; display: flex; align-items: center; justify-content:
     overflow: hidden;
   }
 }
+
+/* Refined iPad landscape map and statistics layout */
+@media (min-width: 901px) and (max-width: 1366px) and (orientation: landscape) {
+  .map-stats-layout {
+    grid-template-columns: minmax(0, 1fr) 270px;
+    gap: 16px;
+  }
+
+  .map-column .map-shell,
+  .stats-sidebar {
+    height: clamp(600px, 68vh, 690px);
+    min-height: 0;
+    box-sizing: border-box;
+  }
+
+  .stats-sidebar {
+    position: relative;
+    grid-template-rows: repeat(4, minmax(0, 1fr));
+    overflow: hidden;
+    border-bottom: 1px solid rgba(80, 255, 126, 0.32);
+    box-shadow: inset 0 -1px 0 rgba(80, 255, 126, 0.18);
+  }
+
+  .stats-sidebar > * {
+    min-height: 0;
+    padding: 14px 20px;
+  }
+
+  .stats-sidebar .stat-card strong {
+    font-size: clamp(2.35rem, 4.2vw, 3.45rem);
+    line-height: 0.95;
+    letter-spacing: -0.035em;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .stats-sidebar .stat-card span {
+    margin-top: 11px;
+    font-size: 0.72rem;
+    line-height: 1.15;
+    letter-spacing: 0.18em;
+  }
+
+  .stats-sidebar .stat-card small {
+    margin-top: 7px;
+    font-size: 0.7rem;
+    line-height: 1.25;
+  }
+}
