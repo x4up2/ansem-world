@@ -4,7 +4,7 @@ ANSEM WORLD is an open-source community map for `$ANSEM` holders on Solana.
 
 The blockchain can identify wallets holding `$ANSEM`, but it cannot determine their country. Holders can therefore voluntarily verify their wallet and select their country to help build the map.
 
-**Live site:** https://ansem-world.vercel.app/
+**Live site:** https://www.ansemworld.com/
 
 ## Security
 

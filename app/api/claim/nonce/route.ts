@@ -54,6 +54,7 @@ export async function POST(request: NextRequest) {
 
   const message = [
     "ANSEM WORLD",
+    "Website: https://www.ansemworld.com",
     "",
     "Claim your place on the $ANSEM world map.",
     "",

@@ -3,7 +3,7 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://ansem-world.vercel.app"),
+  metadataBase: new URL("https://www.ansemworld.com"),
   alternates: {
     canonical: "/",
   },
