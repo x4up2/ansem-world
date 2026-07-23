@@ -19,10 +19,12 @@
     "@turf/center-of-mass": "^7.3.5",
     "@turf/helpers": "^7.3.5",
     "@turf/point-on-feature": "^7.3.5",
+    "@vercel/analytics": "^2.0.1",
+    "@vercel/speed-insights": "^2.0.0",
     "bs58": "^6.0.0",
     "countries-list": "^3.4.1",
     "maplibre-gl": "5.24.0",
-    "next": "16.2.10",
+    "next": "16.2.11",
     "react": "19.2.7",
     "react-dom": "19.2.7",
     "tweetnacl": "^1.0.3"
