@@ -693,3 +693,414 @@ footer { padding: 35px 5vw; display: flex; align-items: center; justify-content:
     line-height: 1.25;
   }
 }
+
+
+/* Map CTA rail and above-the-fold map */
+.map-cta-panel {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 24px 20px;
+  border: 1px solid rgba(80, 255, 126, 0.19);
+  background:
+    linear-gradient(
+      180deg,
+      rgba(34, 255, 98, 0.055),
+      rgba(5, 8, 5, 0.96) 38%
+    );
+  box-shadow:
+    inset 0 0 55px rgba(34, 255, 98, 0.025),
+    0 0 45px rgba(0, 0, 0, 0.2);
+}
+
+.map-cta-copy > span {
+  display: block;
+  color: var(--green);
+  font-size: 0.62rem;
+  font-weight: 900;
+  line-height: 1.45;
+  letter-spacing: 0.18em;
+}
+
+.map-cta-copy h3 {
+  margin: 17px 0 12px;
+  font-size: clamp(1.7rem, 2.25vw, 2.5rem);
+  line-height: 0.96;
+  letter-spacing: -0.045em;
+}
+
+.map-cta-copy p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.76rem;
+  line-height: 1.55;
+}
+
+.map-cta-button {
+  width: 100%;
+  min-height: 72px;
+  padding: 0 15px;
+  font-size: 0.78rem;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.map-cta-reassurance {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 18px 0 0;
+  font-size: 0.61rem;
+  line-height: 1.45;
+  letter-spacing: 0.075em;
+  text-transform: uppercase;
+}
+
+.map-cta-reassurance strong {
+  color: #d2ffdd;
+}
+
+.map-cta-reassurance span {
+  color: rgba(210, 255, 221, 0.58);
+}
+
+/* Shorter hero now that the main action is beside the map */
+@media (min-width: 901px) {
+  .hero {
+    height: 235px;
+    min-height: 235px;
+    max-height: 235px;
+    padding: 76px 7vw 18px;
+  }
+
+  .hero-copy {
+    max-width: 780px;
+  }
+
+  .hero h1 {
+    font-size: clamp(35px, 4vw, 56px);
+  }
+
+  .hero-subtitle {
+    margin: 10px 0 0;
+    font-size: clamp(15px, 1.45vw, 19px);
+  }
+
+  .hero-bull {
+    width: min(15vw, 185px);
+  }
+
+  .map-section {
+    padding-top: 10px;
+  }
+
+  .map-section .section-heading {
+    margin-bottom: 14px;
+  }
+}
+
+/* Three-column desktop layout */
+@media (min-width: 1101px) {
+  .map-stats-layout {
+    grid-template-columns: 220px minmax(0, 1fr) 275px;
+    gap: 16px;
+  }
+
+  .map-column .map-shell,
+  .stats-sidebar,
+  .map-cta-panel {
+    height: min(64vh, 650px);
+    min-height: 500px;
+    box-sizing: border-box;
+  }
+}
+
+/* Refined sizing for iPad landscape and narrower desktop screens */
+@media (min-width: 1101px) and (max-width: 1366px) and (orientation: landscape) {
+  .map-stats-layout {
+    grid-template-columns: 190px minmax(0, 1fr) 250px;
+    gap: 14px;
+  }
+
+  .map-column .map-shell,
+  .stats-sidebar,
+  .map-cta-panel {
+    height: clamp(560px, 62vh, 640px);
+    min-height: 0;
+  }
+
+  .map-cta-panel {
+    padding: 20px 16px;
+  }
+
+  .map-cta-copy h3 {
+    font-size: 1.75rem;
+  }
+
+  .map-cta-button {
+    min-height: 66px;
+    font-size: 0.7rem;
+  }
+}
+
+/* Tablet portrait: compact CTA above the map */
+@media (min-width: 901px) and (max-width: 1100px) {
+  .map-stats-layout {
+    grid-template-columns: minmax(0, 1fr) 250px;
+  }
+
+  .map-cta-panel {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 235px;
+    column-gap: 24px;
+    align-items: center;
+    min-height: 0;
+    padding: 16px 18px;
+  }
+
+  .map-cta-copy h3 {
+    margin: 7px 0 5px;
+    font-size: 1.45rem;
+  }
+
+  .map-cta-copy p {
+    max-width: 520px;
+  }
+
+  .map-cta-button {
+    grid-column: 2;
+    grid-row: 1;
+    min-height: 60px;
+  }
+
+  .map-cta-reassurance {
+    grid-column: 2;
+    grid-row: 2;
+    margin-top: 8px;
+  }
+
+  .map-column .map-shell,
+  .stats-sidebar {
+    height: min(62vh, 620px);
+    min-height: 520px;
+  }
+}
+
+/* Mobile: action panel above the map */
+@media (max-width: 900px) {
+  .map-cta-panel {
+    min-height: 0;
+    padding: 21px;
+  }
+
+  .map-cta-copy h3 {
+    margin: 9px 0 7px;
+  }
+
+  .map-cta-button {
+    min-height: 62px;
+    margin-top: 22px;
+  }
+}
+
+@media (max-width: 520px) {
+  .map-cta-copy p {
+    font-size: 0.74rem;
+  }
+
+  .map-cta-button {
+    min-height: 58px;
+  }
+}
+
+/* Final balance: slightly taller hero, wider map, tighter section spacing */
+@media (min-width: 901px) {
+  .hero {
+    height: 275px;
+    min-height: 275px;
+    max-height: 275px;
+    padding: 78px 7vw 24px;
+  }
+
+  .hero h1 {
+    font-size: clamp(38px, 4.35vw, 62px);
+  }
+
+  .hero-subtitle {
+    margin-top: 12px;
+  }
+
+  .hero-bull {
+    width: min(17vw, 205px);
+  }
+
+  .map-section {
+    padding: 12px 3vw 26px;
+  }
+
+  .map-section .section-heading {
+    margin-bottom: 14px;
+  }
+
+  .how-section {
+    padding-top: 22px;
+  }
+}
+
+/* Give more horizontal space to the map on desktop */
+@media (min-width: 1101px) {
+  .map-stats-layout {
+    grid-template-columns: 205px minmax(0, 1fr) 255px;
+    gap: 14px;
+  }
+}
+
+/* Wider map on iPad landscape and compact desktop screens */
+@media (min-width: 1101px) and (max-width: 1366px) and (orientation: landscape) {
+  .map-stats-layout {
+    grid-template-columns: 175px minmax(0, 1fr) 235px;
+    gap: 12px;
+  }
+
+  .map-cta-panel {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  .stats-sidebar > * {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+/* Final map-first layout: no heading above the map */
+.map-cta-map-note {
+  margin-top: 20px !important;
+  padding-top: 18px;
+  border-top: 1px solid rgba(80, 255, 126, 0.14);
+  color: rgba(210, 255, 221, 0.62) !important;
+  font-size: 0.7rem !important;
+  line-height: 1.55 !important;
+}
+
+@media (min-width: 901px) {
+  .map-section {
+    padding-top: 5px;
+    padding-bottom: 22px;
+  }
+}
+
+/* Use the freed vertical space for a larger map */
+@media (min-width: 1101px) {
+  .map-column .map-shell,
+  .stats-sidebar,
+  .map-cta-panel {
+    height: min(70vh, 720px);
+    min-height: 540px;
+  }
+}
+
+/* Balanced iPad landscape height */
+@media (min-width: 1101px) and (max-width: 1366px) and (orientation: landscape) {
+  .map-column .map-shell,
+  .stats-sidebar,
+  .map-cta-panel {
+    height: clamp(590px, 67vh, 690px);
+    min-height: 0;
+  }
+
+  .map-cta-map-note {
+    margin-top: 15px !important;
+    padding-top: 14px;
+    font-size: 0.66rem !important;
+  }
+}
+
+/* Tablet and mobile */
+@media (max-width: 1100px) {
+  .map-cta-map-note {
+    margin-top: 12px !important;
+    padding-top: 12px;
+  }
+}
+
+/* Final map CTA panel content hierarchy */
+.map-cta-panel {
+  justify-content: space-between;
+}
+
+.map-cta-main {
+  display: flex;
+  flex-direction: column;
+}
+
+.map-cta-main .map-cta-button {
+  margin-top: 22px;
+}
+
+.map-cta-main .map-cta-reassurance {
+  margin: 10px 0 0;
+}
+
+.map-cta-footer {
+  margin-top: auto;
+  padding-top: 24px;
+}
+
+.map-cta-divider {
+  width: 100%;
+  height: 1px;
+  margin-bottom: 16px;
+  background: rgba(80, 255, 126, 0.18);
+}
+
+.map-cta-footer .map-cta-map-note {
+  margin: 0 !important;
+  padding: 0;
+  border: 0;
+  color: rgba(210, 255, 221, 0.62) !important;
+  font-size: 0.7rem !important;
+  line-height: 1.55 !important;
+}
+
+/* Preserve the new vertical order on tablet and mobile */
+@media (max-width: 1100px) {
+  .map-cta-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .map-cta-footer {
+    width: 100%;
+    margin-top: 22px;
+    padding-top: 0;
+  }
+}
+
+@media (max-width: 520px) {
+  .map-cta-main .map-cta-button {
+    margin-top: 18px;
+  }
+
+  .map-cta-footer .map-cta-map-note {
+    font-size: 0.67rem !important;
+  }
+}
+
+/* Balance spacing above and below the map block */
+@media (min-width: 901px) {
+  .map-section {
+    padding-top: 44px;
+  }
+}
+
+/* Equal spacing between the map block and the horizontal separators */
+@media (min-width: 901px) {
+  .map-section {
+    padding-top: 22px;
+    padding-bottom: 22px;
+  }
+}

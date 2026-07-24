@@ -136,17 +136,8 @@ export function LandingPage() {
         <div className="hero-grid" />
         <div className="hero-copy">
           <h1><span>THE GLOBAL</span> $ANSEM HERD</h1>
-          <p className="hero-subtitle">Track the herd. Put your country on the map.</p>
-          <div className="hero-actions">
-            <button className="primary-button" type="button" onClick={() => setClaimOpen(true)}>JOIN THE HERD</button>
-            <a className="secondary-button" href="#map">EXPLORE THE MAP ↓</a>
-          </div>
-          <p className="signature-reassurance">
-            <strong>MESSAGE SIGNATURE ONLY</strong>
-            <span>— no transaction or token approval.</span>
-          </p>
-
-          <p className="community-map-explanation">
+          <p className="hero-subtitle">Track the herd. One country. One light.</p>
+<p className="community-map-explanation">
             Solana can identify $ANSEM holders, but not their country.
             The community map can only grow when holders voluntarily
             verify their wallet and select their country.
@@ -160,11 +151,44 @@ export function LandingPage() {
       </section>
 
       <section className="map-section" id="map">
-        <div className="section-heading">
-          <div><h2>One country. One light.</h2></div>
-          <p>Each light groups verified $ANSEM holders by country. The larger the light, the larger the local herd.</p>
-        </div>
-        <div className="map-stats-layout">
+<div className="map-stats-layout">
+          <aside
+            className="map-cta-panel"
+            aria-label="Join the ANSEM community map"
+          >
+            <div className="map-cta-main">
+              <div className="map-cta-copy">
+                <span>PUT YOUR COUNTRY ON THE MAP</span>
+                <h3>Join the global herd.</h3>
+                <p>
+                  Verify your $ANSEM wallet and add your country to the
+                  community map.
+                </p>
+              </div>
+
+              <button
+                className="primary-button map-cta-button"
+                type="button"
+                onClick={() => setClaimOpen(true)}
+              >
+                JOIN THE HERD
+              </button>
+
+              <p className="map-cta-reassurance">
+                <strong>MESSAGE SIGNATURE ONLY</strong>
+                <span>No transaction or token approval.</span>
+              </p>
+            </div>
+
+            <div className="map-cta-footer">
+              <div className="map-cta-divider" aria-hidden="true" />
+              <p className="map-cta-map-note">
+                Each light groups verified $ANSEM holders by country.
+                The larger the light, the larger the local herd.
+              </p>
+            </div>
+          </aside>
+
           <div className="map-column">
             <LiveMap />
           </div>
