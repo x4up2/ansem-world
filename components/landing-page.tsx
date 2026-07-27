@@ -150,7 +150,7 @@ export function LandingPage() {
         <div className="hero-grid" />
         <div className="hero-copy">
           <h1><span>THE GLOBAL</span> $ANSEM HERD</h1>
-          <p className="hero-subtitle">Track the herd. One country. One light.</p>
+          <p className="hero-subtitle">Help build the global $ANSEM holder map. Add your bull to your country — bigger dots mean bigger herds.</p>
 <p className="community-map-explanation">
             Solana can identify $ANSEM holders, but not their country.
             The community map can only grow when holders voluntarily
