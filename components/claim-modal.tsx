@@ -67,6 +67,8 @@ export function ClaimModal({
 
   const [busy, setBusy] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [requiresPhantomMobile, setRequiresPhantomMobile] =
+    useState(false);
 
   const selectedCountry = useMemo(
     () =>
@@ -82,11 +84,43 @@ export function ClaimModal({
       setStatus(null);
       setBusy(false);
       setSuccess(false);
+
+      const provider =
+        window.phantom?.solana ??
+        window.solana;
+
+      const isMobile =
+        /Android|iPhone|iPad|iPod/i.test(
+          navigator.userAgent
+        ) ||
+        (/Macintosh/i.test(navigator.userAgent) &&
+          navigator.maxTouchPoints > 1);
+
+      setRequiresPhantomMobile(
+        isMobile && provider == null
+      );
     }
   }, [open]);
 
   if (!open) {
     return null;
+  }
+
+  function openInPhantomBrowser() {
+    const targetUrl = new URL(
+      window.location.href
+    );
+
+    targetUrl.searchParams.set("join", "1");
+
+    const phantomUrl =
+      `https://phantom.app/ul/browse/${encodeURIComponent(
+        targetUrl.toString()
+      )}?ref=${encodeURIComponent(
+        window.location.origin
+      )}`;
+
+    window.location.assign(phantomUrl);
   }
 
   async function connectAndSign() {
@@ -302,17 +336,33 @@ export function ClaimModal({
         <button
           className="primary-button full"
           type="button"
-          onClick={connectAndSign}
+          onClick={
+            requiresPhantomMobile
+              ? openInPhantomBrowser
+              : connectAndSign
+          }
           disabled={busy || success}
         >
           {success
             ? "YOU’RE COUNTED"
             : busy
               ? "PLEASE WAIT…"
-              : wallet
-                ? `SIGN WITH ${wallet.slice(0, 4)}…${wallet.slice(-4)}`
-                : "CONNECT & VERIFY"}
+              : requiresPhantomMobile
+                ? "OPEN IN PHANTOM"
+                : wallet
+                  ? `SIGN WITH ${wallet.slice(0, 4)}…${wallet.slice(-4)}`
+                  : "CONNECT & VERIFY"}
         </button>
+
+        {requiresPhantomMobile && status === null && (
+          <p
+            className="claim-status"
+            role="status"
+            aria-live="polite"
+          >
+            On mobile, continue in Phantom’s in-app browser.
+          </p>
+        )}
 
         {status && (
           <p

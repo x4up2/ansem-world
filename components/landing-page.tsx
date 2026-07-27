@@ -31,6 +31,20 @@ export function LandingPage() {
   const [stats, setStats] = useState(initialStats);
 
   useEffect(() => {
+    const url = new URL(window.location.href);
+
+    if (url.searchParams.get("join") === "1") {
+      setClaimOpen(true);
+      url.searchParams.delete("join");
+
+      const cleanUrl =
+        `${url.pathname}${url.search}${url.hash}`;
+
+      window.history.replaceState({}, "", cleanUrl);
+    }
+  }, []);
+
+  useEffect(() => {
     let active = true;
 
     async function loadStats() {
@@ -158,11 +172,11 @@ export function LandingPage() {
           >
             <div className="map-cta-main">
               <div className="map-cta-copy">
-                <span>PUT YOUR COUNTRY ON THE MAP</span>
+                <span>ADD YOUR BULL TO THE MAP</span>
                 <h3>Join the global herd.</h3>
                 <p>
-                  Verify your $ANSEM wallet and add your country to the
-                  community map.
+                  Verify your $ANSEM wallet and add your bull to your
+                  country’s herd.
                 </p>
               </div>
 
