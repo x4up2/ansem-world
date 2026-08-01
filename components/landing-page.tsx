@@ -31,7 +31,11 @@ const initialStats: Stats = {
   mode: "loading"
 };
 
-export function LandingPage() {
+export function LandingPage({
+  initialVerificationToken
+}: {
+  initialVerificationToken?: string;
+}) {
   const [claimOpen, setClaimOpen] = useState(false);
   const [communityOpen, setCommunityOpen] = useState(false);
   const [verifyCountry, setVerifyCountry] =
@@ -48,6 +52,7 @@ export function LandingPage() {
     const url = new URL(window.location.href);
 
     const mobileVerificationToken =
+      initialVerificationToken ??
       url.searchParams.get("verify_token");
 
     if (mobileVerificationToken) {
@@ -57,20 +62,28 @@ export function LandingPage() {
 
       setClaimOpen(true);
 
-      url.searchParams.delete(
-        "verify_token"
-      );
+      if (initialVerificationToken) {
+        window.history.replaceState(
+          {},
+          "",
+          "/"
+        );
+      } else {
+        url.searchParams.delete(
+          "verify_token"
+        );
 
-      url.searchParams.delete("join");
+        url.searchParams.delete("join");
 
-      const cleanUrl =
-        `${url.pathname}${url.search}${url.hash}`;
+        const cleanUrl =
+          `${url.pathname}${url.search}${url.hash}`;
 
-      window.history.replaceState(
-        {},
-        "",
-        cleanUrl
-      );
+        window.history.replaceState(
+          {},
+          "",
+          cleanUrl
+        );
+      }
 
       return;
     }
@@ -88,7 +101,7 @@ export function LandingPage() {
         cleanUrl
       );
     }
-  }, []);
+  }, [initialVerificationToken]);
 
   useEffect(() => {
     let active = true;
