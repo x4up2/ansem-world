@@ -244,13 +244,8 @@ export function ClaimModal({
       }
 
       const targetUrl = new URL(
-        window.location.pathname,
+        `/verify/${encodeURIComponent(token)}`,
         window.location.origin
-      );
-
-      targetUrl.searchParams.set(
-        "verify_token",
-        token
       );
 
       const phantomUrl =
