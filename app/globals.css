@@ -1144,3 +1144,25 @@ footer { padding: 35px 5vw; display: flex; align-items: center; justify-content:
   font-size: 11px;
   line-height: 1.55;
 }
+
+.ansem-popup-pinned
+.maplibregl-popup-close-button {
+  padding: 5px 8px;
+  color: #d7e1d8;
+  font-size: 20px;
+  line-height: 1;
+}
+
+.ansem-popup-pinned
+.maplibregl-popup-close-button:hover {
+  color: #22ff62;
+  background: transparent;
+}
+
+@media (pointer: coarse) {
+  .ansem-popup
+  .maplibregl-popup-content {
+    min-width: 190px;
+    padding: 14px 34px 14px 15px;
+  }
+}

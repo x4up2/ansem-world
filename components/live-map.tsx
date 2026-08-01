@@ -421,11 +421,65 @@ export function LiveMap() {
         }
       });
 
-      const popup = new maplibregl.Popup({
-        closeButton: false,
-        offset: 12,
-        className: "ansem-popup"
+      const hoverPopup =
+        new maplibregl.Popup({
+          closeButton: false,
+          closeOnClick: false,
+          offset: 12,
+          className: "ansem-popup"
+        });
+
+      const pinnedPopup =
+        new maplibregl.Popup({
+          closeButton: true,
+          closeOnClick: false,
+          offset: 12,
+          className:
+            "ansem-popup ansem-popup-pinned"
+        });
+
+      let popupPinned = false;
+
+      pinnedPopup.on("close", () => {
+        popupPinned = false;
       });
+
+      function displayPopup(
+        popup: maplibregl.Popup,
+        coordinates: [number, number],
+        country: string,
+        claims: number,
+        verifiedBulls: number
+      ) {
+        const popupContent =
+          document.createElement("div");
+
+        const title =
+          document.createElement("strong");
+
+        title.textContent = country;
+
+        const detail =
+          document.createElement("span");
+
+        detail.textContent =
+          `${claims.toLocaleString()} ` +
+          `${claims === 1 ? "bull" : "bulls"}, including ` +
+          `${verifiedBulls.toLocaleString()} ` +
+          `${verifiedBulls === 1
+            ? "verified holder"
+            : "verified holders"}`;
+
+        popupContent.append(
+          title,
+          detail
+        );
+
+        popup
+          .setLngLat(coordinates)
+          .setDOMContent(popupContent)
+          .addTo(map);
+      }
 
       map.on(
         "mouseenter",
@@ -433,6 +487,10 @@ export function LiveMap() {
         (event) => {
           map.getCanvas().style.cursor =
             "pointer";
+
+          if (popupPinned) {
+            return;
+          }
 
           const feature =
             event.features?.[0];
@@ -454,37 +512,18 @@ export function LiveMap() {
           );
 
           const verifiedBulls = Number(
-            feature.properties?.verifiedBulls ?? 0
+            feature.properties
+              ?.verifiedBulls ?? 0
           );
 
-          const popupContent =
-            document.createElement("div");
-
-          const title =
-            document.createElement("strong");
-
-          title.textContent = country;
-
-          const detail =
-            document.createElement("span");
-
-          detail.textContent =
-            `${claims.toLocaleString()} ` +
-            `${claims === 1 ? "bull" : "bulls"}, including ` +
-            `${verifiedBulls.toLocaleString()} ` +
-            `${verifiedBulls === 1
-              ? "verified holder"
-              : "verified holders"}`;
-
-          popupContent.append(title, detail);
-
-          popup
-            .setLngLat(
-              feature.geometry
-                .coordinates as [number, number]
-            )
-            .setDOMContent(popupContent)
-            .addTo(map);
+          displayPopup(
+            hoverPopup,
+            feature.geometry
+              .coordinates as [number, number],
+            country,
+            claims,
+            verifiedBulls
+          );
         }
       );
 
@@ -493,9 +532,66 @@ export function LiveMap() {
         POINT_LAYER_ID,
         () => {
           map.getCanvas().style.cursor = "";
-          popup.remove();
+          hoverPopup.remove();
         }
       );
+
+      map.on(
+        "click",
+        POINT_LAYER_ID,
+        (event) => {
+          const feature =
+            event.features?.[0];
+
+          if (
+            !feature ||
+            feature.geometry.type !== "Point"
+          ) {
+            return;
+          }
+
+          const country = String(
+            feature.properties?.country ??
+              "ANSEM WORLD"
+          );
+
+          const claims = Number(
+            feature.properties?.claims ?? 0
+          );
+
+          const verifiedBulls = Number(
+            feature.properties
+              ?.verifiedBulls ?? 0
+          );
+
+          popupPinned = true;
+          hoverPopup.remove();
+
+          displayPopup(
+            pinnedPopup,
+            feature.geometry
+              .coordinates as [number, number],
+            country,
+            claims,
+            verifiedBulls
+          );
+        }
+      );
+
+      map.on("click", (event) => {
+        const points =
+          map.queryRenderedFeatures(
+            event.point,
+            {
+              layers: [POINT_LAYER_ID]
+            }
+          );
+
+        if (points.length === 0) {
+          popupPinned = false;
+          pinnedPopup.remove();
+        }
+      });
 
       map.resize();
       setStatus("ready");
