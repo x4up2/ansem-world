@@ -51,14 +51,25 @@ type ClaimResponse = {
   message?: string;
 };
 
+type VerificationTokenResponse = {
+  ok?: boolean;
+  error?: string;
+  token?: string;
+  countryCode?: string;
+  status?: string;
+  expiresAt?: string;
+};
+
 export function ClaimModal({
   open,
   onClose,
-  initialCountry
+  initialCountry,
+  verificationToken
 }: {
   open: boolean;
   onClose(): void;
   initialCountry?: string;
+  verificationToken?: string;
 }) {
   const [country, setCountry] = useState("FR");
   const [wallet, setWallet] =
@@ -69,6 +80,17 @@ export function ClaimModal({
 
   const [busy, setBusy] = useState(false);
   const [success, setSuccess] = useState(false);
+
+  const [
+    checkingVerificationToken,
+    setCheckingVerificationToken
+  ] = useState(false);
+
+  const [
+    verificationTokenValid,
+    setVerificationTokenValid
+  ] = useState(true);
+
   const [requiresPhantomMobile, setRequiresPhantomMobile] =
     useState(false);
 
@@ -81,49 +103,173 @@ export function ClaimModal({
   );
 
   useEffect(() => {
-    if (open) {
-      setCountry(initialCountry ?? "FR");
-      setWallet(null);
-      setStatus(null);
-      setBusy(false);
-      setSuccess(false);
-
-      const provider =
-        window.phantom?.solana ??
-        window.solana;
-
-      const isMobile =
-        /Android|iPhone|iPad|iPod/i.test(
-          navigator.userAgent
-        ) ||
-        (/Macintosh/i.test(navigator.userAgent) &&
-          navigator.maxTouchPoints > 1);
-
-      setRequiresPhantomMobile(
-        isMobile && provider == null
-      );
+    if (!open) {
+      return;
     }
-  }, [open, initialCountry]);
+
+    let cancelled = false;
+
+    setCountry(initialCountry ?? "FR");
+    setWallet(null);
+    setStatus(null);
+    setBusy(false);
+    setSuccess(false);
+
+    setCheckingVerificationToken(
+      Boolean(verificationToken)
+    );
+
+    setVerificationTokenValid(
+      !verificationToken
+    );
+
+    const provider =
+      window.phantom?.solana ??
+      window.solana;
+
+    const isMobile =
+      /Android|iPhone|iPad|iPod/i.test(
+        navigator.userAgent
+      ) ||
+      (/Macintosh/i.test(navigator.userAgent) &&
+        navigator.maxTouchPoints > 1);
+
+    setRequiresPhantomMobile(
+      isMobile && provider == null
+    );
+
+    if (verificationToken) {
+      void (async () => {
+        try {
+          const response = await fetch(
+            `/api/community-bulls/verification-token?token=${encodeURIComponent(
+              verificationToken
+            )}`,
+            {
+              method: "GET",
+              cache: "no-store"
+            }
+          );
+
+          const body =
+            (await response.json()) as VerificationTokenResponse;
+
+          if (
+            !response.ok ||
+            !body.ok ||
+            !body.countryCode
+          ) {
+            throw new Error(
+              body.error ??
+                "The mobile verification link is invalid."
+            );
+          }
+
+          if (cancelled) {
+            return;
+          }
+
+          setCountry(body.countryCode);
+          setVerificationTokenValid(true);
+          setStatus(
+            "Your community bull is ready to verify."
+          );
+        } catch (error) {
+          if (cancelled) {
+            return;
+          }
+
+          setVerificationTokenValid(false);
+
+          setStatus(
+            error instanceof Error
+              ? error.message
+              : "The mobile verification link could not be validated."
+          );
+        } finally {
+          if (!cancelled) {
+            setCheckingVerificationToken(false);
+          }
+        }
+      })();
+    }
+
+    return () => {
+      cancelled = true;
+    };
+  }, [
+    open,
+    initialCountry,
+    verificationToken
+  ]);
 
   if (!open) {
     return null;
   }
 
-  function openInPhantomBrowser() {
-    const targetUrl = new URL(
-      window.location.href
+  async function openInPhantomBrowser() {
+    setBusy(true);
+    setStatus(
+      "Preparing a secure handoff to Phantom…"
     );
 
-    targetUrl.searchParams.set("join", "1");
+    try {
+      let token =
+        verificationToken ?? "";
 
-    const phantomUrl =
-      `https://phantom.app/ul/browse/${encodeURIComponent(
-        targetUrl.toString()
-      )}?ref=${encodeURIComponent(
+      if (!token) {
+        const response = await fetch(
+          "/api/community-bulls/verification-token",
+          {
+            method: "POST",
+            cache: "no-store"
+          }
+        );
+
+        const body =
+          (await response.json()) as VerificationTokenResponse;
+
+        if (
+          !response.ok ||
+          !body.ok ||
+          !body.token
+        ) {
+          throw new Error(
+            body.error ??
+              "Unable to prepare mobile verification."
+          );
+        }
+
+        token = body.token;
+      }
+
+      const targetUrl = new URL(
+        window.location.pathname,
         window.location.origin
-      )}`;
+      );
 
-    window.location.assign(phantomUrl);
+      targetUrl.searchParams.set(
+        "verify_token",
+        token
+      );
+
+      const phantomUrl =
+        `https://phantom.app/ul/browse/${encodeURIComponent(
+          targetUrl.toString()
+        )}?ref=${encodeURIComponent(
+          window.location.origin
+        )}`;
+
+      window.location.assign(phantomUrl);
+    } catch (error) {
+      setStatus(
+        error instanceof Error
+          ? error.message
+          : "Unable to open mobile verification."
+      );
+
+      setBusy(false);
+    }
   }
 
   async function connectAndSign() {
@@ -216,7 +362,8 @@ export function ClaimModal({
             message: nonceBody.message,
             signature: Array.from(
               signed.signature
-            )
+            ),
+            verificationToken
           })
         }
       );
@@ -304,7 +451,12 @@ export function ClaimModal({
         <select
           id="country"
           value={country}
-          disabled={busy || success}
+          disabled={
+            busy ||
+            success ||
+            checkingVerificationToken ||
+            Boolean(verificationToken)
+          }
           onChange={(event) =>
             setCountry(event.target.value)
           }
@@ -342,7 +494,12 @@ export function ClaimModal({
               ? openInPhantomBrowser
               : connectAndSign
           }
-          disabled={busy || success}
+          disabled={
+            busy ||
+            success ||
+            checkingVerificationToken ||
+            !verificationTokenValid
+          }
         >
           {success
             ? "YOU’RE COUNTED"
