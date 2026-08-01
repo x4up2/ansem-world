@@ -53,10 +53,12 @@ type ClaimResponse = {
 
 export function ClaimModal({
   open,
-  onClose
+  onClose,
+  initialCountry
 }: {
   open: boolean;
   onClose(): void;
+  initialCountry?: string;
 }) {
   const [country, setCountry] = useState("FR");
   const [wallet, setWallet] =
@@ -80,6 +82,7 @@ export function ClaimModal({
 
   useEffect(() => {
     if (open) {
+      setCountry(initialCountry ?? "FR");
       setWallet(null);
       setStatus(null);
       setBusy(false);
@@ -100,7 +103,7 @@ export function ClaimModal({
         isMobile && provider == null
       );
     }
-  }, [open]);
+  }, [open, initialCountry]);
 
   if (!open) {
     return null;
@@ -278,17 +281,17 @@ export function ClaimModal({
         </button>
 
         <p className="eyebrow">
-          JOIN THE GLOBAL HERD
+          OPTIONAL HOLDER VERIFICATION
         </p>
 
         <h2 id="claim-title">
-          Join your country’s herd
+          Verify your bull
         </h2>
 
         <p className="modal-copy">
-          Choose your country, connect your wallet
-          and sign a one-time message. No
-          transaction, no fee and no exact location.
+          Connect your wallet and sign a readable
+          one-time message to prove that you hold
+          $ANSEM. No transaction or token approval.
         </p>
 
         <label
@@ -317,19 +320,17 @@ export function ClaimModal({
           <strong>Privacy by design</strong>
 
           <span>
-            One shared point is displayed at the center of{" "}
-            {selectedCountry}. Its size is proportional to the number of
-            verified $ANSEM holders in that country. No precise location is
-            requested or displayed.
+            Verification upgrades your community bull in{" "}
+            {selectedCountry}. It does not add a second bull, and no precise
+            location is requested or displayed.
           </span>
         </div>
 
         <div className="map-building-note">
           <strong>WHY CONNECT?</strong>
           <span>
-            Solana shows which wallets hold $ANSEM, but not their country.
-            This map can only grow when holders voluntarily verify their
-            wallet and select their country.
+            Verification is optional. It proves that the connected
+            wallet currently holds $ANSEM and marks your bull as verified.
           </span>
         </div>
 

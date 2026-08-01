@@ -1104,3 +1104,43 @@ footer { padding: 35px 5vw; display: flex; align-items: center; justify-content:
     padding-bottom: 22px;
   }
 }
+
+.turnstile-shell {
+  min-height: 70px;
+  margin: 0 0 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.turnstile-shell > div {
+  width: 100%;
+}
+
+.turnstile-shell span {
+  color: #aab4ab;
+  font-size: 11px;
+}
+
+.community-verify-panel {
+  margin-top: 20px;
+  padding: 17px;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  border: 1px solid rgba(34, 255, 98, 0.2);
+  background: rgba(34, 255, 98, 0.045);
+}
+
+.community-verify-panel strong {
+  color: var(--green-soft);
+  font-size: 12px;
+}
+
+.community-verify-panel span {
+  margin-bottom: 7px;
+  color: #8f9b90;
+  font-size: 11px;
+  line-height: 1.55;
+}

@@ -11,3 +11,5 @@ holders-snapshot.json
 .DS_Store
 **/.DS_Store
 START-DEV.command
+
+tsconfig.tsbuildinfo

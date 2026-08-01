@@ -4,11 +4,14 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { ANSEM_MINT } from "@/lib/config";
 import { ClaimModal } from "./claim-modal";
+import { CommunityBullModal } from "./community-bull-modal";
 import { LiveMap } from "./live-map";
 
 type Stats = {
   totalHolders: number;
   mappedHolders: number;
+  verifiedHolders: number;
+  communityBulls: number;
   countries: number;
   last24h: number;
   generatedAt?: string | null;
@@ -19,6 +22,8 @@ type Stats = {
 const initialStats: Stats = {
   totalHolders: 0,
   mappedHolders: 0,
+  verifiedHolders: 0,
+  communityBulls: 0,
   countries: 0,
   last24h: 0,
   generatedAt: null,
@@ -28,6 +33,9 @@ const initialStats: Stats = {
 
 export function LandingPage() {
   const [claimOpen, setClaimOpen] = useState(false);
+  const [communityOpen, setCommunityOpen] = useState(false);
+  const [verifyCountry, setVerifyCountry] =
+    useState<string | null>(null);
   const [stats, setStats] = useState(initialStats);
 
   useEffect(() => {
@@ -151,14 +159,13 @@ export function LandingPage() {
         <div className="hero-copy">
           <h1><span>THE GLOBAL</span> $ANSEM HERD</h1>
           <p className="hero-subtitle">
-          Help build the global $ANSEM holder map.
+          Help build the global $ANSEM community map.
           <br />
           Add your bull to your country. Bigger dots mean bigger herds.
         </p>
 <p className="community-map-explanation">
-            Solana can identify $ANSEM holders, but not their country.
-            The community map can only grow when holders voluntarily
-            verify their wallet and select their country.
+            Anyone can add one community bull to a country.
+            $ANSEM holders can optionally verify their bull with Phantom.
           </p>
 
         </div>
@@ -179,29 +186,29 @@ export function LandingPage() {
                 <span>ADD YOUR BULL TO THE MAP</span>
                 <h3>Join the global herd.</h3>
                 <p>
-                  Verify your $ANSEM wallet and add your bull to your
-                  country’s herd.
+                  Choose your country and add one community bull.
+                  No wallet connection required.
                 </p>
               </div>
 
               <button
                 className="primary-button map-cta-button"
                 type="button"
-                onClick={() => setClaimOpen(true)}
+                onClick={() => setCommunityOpen(true)}
               >
                 JOIN THE HERD
               </button>
 
               <p className="map-cta-reassurance">
-                <strong>MESSAGE SIGNATURE ONLY</strong>
-                <span>No transaction or token approval.</span>
+                <strong>NO WALLET NEEDED</strong>
+                <span>Phantom verification is optional.</span>
               </p>
             </div>
 
             <div className="map-cta-footer">
               <div className="map-cta-divider" aria-hidden="true" />
               <p className="map-cta-map-note">
-                Each light groups verified $ANSEM holders by country.
+                Each light groups bulls by country.
                 The larger the light, the larger the local herd.
               </p>
             </div>
@@ -216,36 +223,56 @@ export function LandingPage() {
             id="stats"
             aria-label="Community statistics"
           >
-          <Stat
-            value={stats.totalHolders.toLocaleString("en-US")}
-            label="TOTAL HOLDERS"
-            note={formatSnapshotNote(stats.generatedAt)}
-          />
-          <Stat
-            value={stats.mappedHolders.toLocaleString("en-US")}
-            label="MAPPED BULLS"
-            note="auto-refresh · 10s"
-          />
-          <Stat
-            value={String(stats.countries)}
-            label="COUNTRIES"
-            note="verified communities"
-          />
-          <Stat
-            value={stats.last24h.toLocaleString("en-US")}
-            label="LAST 24 HOURS"
-            note="new verified bulls"
-          />
+            <Stat
+              value={stats.totalHolders.toLocaleString("en-US")}
+              label="TOTAL HOLDERS"
+              note={formatSnapshotNote(stats.generatedAt)}
+            />
+            <Stat
+              value={stats.mappedHolders.toLocaleString("en-US")}
+              label="MAPPED BULLS"
+              note="community + verified"
+            />
+            <Stat
+              value={stats.verifiedHolders.toLocaleString("en-US")}
+              label="VERIFIED BULLS"
+              note="verified with Phantom"
+            />
+            <Stat
+              value={String(stats.countries)}
+              label="COUNTRIES"
+              note="active local herds"
+            />
           </aside>
         </div>
       </section>
 
       <section className="how-section" id="how">
-        <div className="section-heading compact"><div><p className="eyebrow">PRIVACY-FIRST</p><h2>One signature. Zero transactions.</h2></div></div>
+        <div className="section-heading compact">
+          <div>
+            <p className="eyebrow">
+              LOW FRICTION, OPTIONAL PROOF
+            </p>
+            <h2>Add first. Verify if you choose.</h2>
+          </div>
+        </div>
+
         <div className="steps">
-          <Step number="01" title="Connect" text="Use Phantom Wallet. More Solana wallets may be supported later. The site never sees your private key or seed phrase." />
-          <Step number="02" title="Prove" text="Sign a human-readable message and let the server verify that the wallet holds $ANSEM." />
-          <Step number="03" title="Join" text="Choose a country. Your verified wallet increases that country’s light; no precise location is requested or displayed." />
+          <Step
+            number="01"
+            title="Add"
+            text="Choose your country and add one community bull. No wallet connection is required."
+          />
+          <Step
+            number="02"
+            title="Verify"
+            text="Optional: connect Phantom and sign a readable message to prove that you hold $ANSEM. No transaction or token approval."
+          />
+          <Step
+            number="03"
+            title="Grow"
+            text="Bigger dots mean bigger local herds. Verified holders are counted separately."
+          />
         </div>
       </section>
 
@@ -281,10 +308,27 @@ export function LandingPage() {
 
       <footer>
         <div className="brand footer-brand"><Image src="/ansem-bull.png" alt="" width={34} height={34} /><span>ANSEM <strong>WORLD</strong></span></div>
-        <p>Community concept. Not financial advice. Geographic claims are voluntary and self-declared.</p>
+        <p>Community concept. Not financial advice. Country selections are voluntary and self-declared; verified bulls are wallet-checked.</p>
       </footer>
 
-      <ClaimModal open={claimOpen} onClose={() => setClaimOpen(false)} />
+      <CommunityBullModal
+        open={communityOpen}
+        onClose={() => setCommunityOpen(false)}
+        onVerify={(countryCode) => {
+          setVerifyCountry(countryCode);
+          setCommunityOpen(false);
+          setClaimOpen(true);
+        }}
+      />
+
+      <ClaimModal
+        open={claimOpen}
+        initialCountry={verifyCountry ?? undefined}
+        onClose={() => {
+          setClaimOpen(false);
+          setVerifyCountry(null);
+        }}
+      />
     </main>
   );
 }

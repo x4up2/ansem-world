@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 import {
-  getCountryClaimCounts,
+  getMapCountryCounts,
   getRecentClaimCount
 } from "@/lib/country-claims";
 
@@ -17,39 +17,53 @@ export async function GET() {
     const snapshot =
       await getLatestHolderSnapshot();
 
-    let countryClaims:
+    let countryBulls:
       Awaited<
         ReturnType<
-          typeof getCountryClaimCounts
+          typeof getMapCountryCounts
         >
       > = [];
 
     let last24h = 0;
-    let claimsAvailable = true;
+    let mapAvailable = true;
 
     try {
       const since = new Date(
         Date.now() - 24 * 60 * 60 * 1000
       );
 
-      [countryClaims, last24h] =
+      [countryBulls, last24h] =
         await Promise.all([
-          getCountryClaimCounts(),
+          getMapCountryCounts(),
           getRecentClaimCount(since)
         ]);
     } catch (error) {
-      claimsAvailable = false;
+      mapAvailable = false;
 
       console.error(
-        "Unable to load live claim statistics:",
+        "Unable to load live map statistics:",
         error
       );
     }
 
-    const mappedHolders =
-      countryClaims.reduce(
+    const mappedBulls =
+      countryBulls.reduce(
         (total, country) =>
           total + country.claims,
+        0
+      );
+
+    const verifiedHolders =
+      countryBulls.reduce(
+        (total, country) =>
+          total + country.verifiedBulls,
+        0
+      );
+
+    const communityBulls =
+      countryBulls.reduce(
+        (total, country) =>
+          total + country.communityBulls,
         0
       );
 
@@ -61,8 +75,11 @@ export async function GET() {
         tokenAccountCount:
           snapshot.tokenAccountCount,
 
-        mappedHolders,
-        countries: countryClaims.length,
+        mappedHolders: mappedBulls,
+        mappedBulls,
+        verifiedHolders,
+        communityBulls,
+        countries: countryBulls.length,
         last24h,
 
         generatedAt:
@@ -77,8 +94,8 @@ export async function GET() {
         liveUpdatedAt:
           new Date().toISOString(),
 
-        mode: claimsAvailable
-          ? "supabase-snapshot+live-claims"
+        mode: mapAvailable
+          ? "supabase-snapshot+community-map"
           : "supabase-snapshot"
       },
       {
@@ -99,6 +116,9 @@ export async function GET() {
         totalHolders: 0,
         tokenAccountCount: null,
         mappedHolders: 0,
+        mappedBulls: 0,
+        verifiedHolders: 0,
+        communityBulls: 0,
         countries: 0,
         last24h: 0,
         generatedAt: null,
