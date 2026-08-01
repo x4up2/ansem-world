@@ -470,8 +470,11 @@ export function LiveMap() {
 
           detail.textContent =
             `${claims.toLocaleString()} ` +
-            `${claims === 1 ? "bull" : "bulls"} · ` +
-            `${verifiedBulls.toLocaleString()} verified`;
+            `${claims === 1 ? "bull" : "bulls"}, including ` +
+            `${verifiedBulls.toLocaleString()} ` +
+            `${verifiedBulls === 1
+              ? "verified holder"
+              : "verified holders"}`;
 
           popupContent.append(title, detail);
 
@@ -623,7 +626,11 @@ export function LiveMap() {
                 summary.totalClaims === 1
                   ? "BULL"
                   : "BULLS"
-              } · ${summary.verifiedBulls.toLocaleString()} VERIFIED`}
+              } · ${summary.verifiedBulls.toLocaleString()} ${
+                summary.verifiedBulls === 1
+                  ? "VERIFIED HOLDER"
+                  : "VERIFIED HOLDERS"
+              }`}
       </div>
     </div>
   );

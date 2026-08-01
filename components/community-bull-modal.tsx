@@ -44,6 +44,8 @@ type CommunityBullResponse = {
   message?: string;
   countryCode?: string;
   status?: string;
+  existing?: boolean;
+  canVerify?: boolean;
 };
 
 const TURNSTILE_SITE_KEY =
@@ -61,6 +63,10 @@ export function CommunityBullModal({
   const [country, setCountry] = useState("FR");
   const [busy, setBusy] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [existingStatus, setExistingStatus] =
+    useState<string | null>(null);
+  const [checkingExisting, setCheckingExisting] =
+    useState(false);
   const [status, setStatus] =
     useState<string | null>(null);
 
@@ -89,15 +95,70 @@ export function CommunityBullModal({
       return;
     }
 
+    let cancelled = false;
+
     setBusy(false);
     setSuccess(false);
+    setExistingStatus(null);
     setStatus(null);
     setTurnstileToken("");
+    setCheckingExisting(true);
+
+    void (async () => {
+      try {
+        const response = await fetch(
+          "/api/community-bulls",
+          {
+            method: "GET",
+            cache: "no-store"
+          }
+        );
+
+        const body =
+          (await response.json()) as CommunityBullResponse;
+
+        if (
+          cancelled ||
+          !response.ok ||
+          !body.existing ||
+          !body.countryCode
+        ) {
+          return;
+        }
+
+        setCountry(body.countryCode);
+        setSuccess(true);
+        setExistingStatus(
+          body.status ?? "active"
+        );
+
+        setStatus(
+          body.status === "verified"
+            ? "Your bull is already verified."
+            : "Your community bull is already on the map. You can now verify it with Phantom."
+        );
+      } catch (error) {
+        console.error(
+          "Unable to restore community bull:",
+          error
+        );
+      } finally {
+        if (!cancelled) {
+          setCheckingExisting(false);
+        }
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
   }, [open]);
 
   useEffect(() => {
     if (
       !open ||
+      checkingExisting ||
+      success ||
       !turnstileReady ||
       !TURNSTILE_SITE_KEY ||
       !containerRef.current ||
@@ -163,7 +224,12 @@ export function CommunityBullModal({
 
       widgetIdRef.current = null;
     };
-  }, [open, turnstileReady]);
+  }, [
+    open,
+    turnstileReady,
+    checkingExisting,
+    success
+  ]);
 
   if (!open) {
     return null;
@@ -210,6 +276,9 @@ export function CommunityBullModal({
       }
 
       setSuccess(true);
+      setExistingStatus(
+        body.status ?? "active"
+      );
       setStatus(
         body.message ??
           `Your bull has been added to ${selectedCountry}.`
@@ -298,7 +367,11 @@ export function CommunityBullModal({
             <select
               id="community-country"
               value={country}
-              disabled={busy || success}
+              disabled={
+                busy ||
+                success ||
+                checkingExisting
+              }
               onChange={(event) =>
                 setCountry(event.target.value)
               }
@@ -320,15 +393,21 @@ export function CommunityBullModal({
               </span>
             </div>
 
-            <div className="turnstile-shell">
-              {!TURNSTILE_SITE_KEY ? (
-                <span>
-                  Human verification is unavailable.
-                </span>
-              ) : (
-                <div ref={containerRef} />
-              )}
-            </div>
+            {!success && (
+              <div className="turnstile-shell">
+                {checkingExisting ? (
+                  <span>
+                    Checking for an existing bull…
+                  </span>
+                ) : !TURNSTILE_SITE_KEY ? (
+                  <span>
+                    Human verification is unavailable.
+                  </span>
+                ) : (
+                  <div ref={containerRef} />
+                )}
+              </div>
+            )}
 
             <button
               className="primary-button full"
@@ -336,6 +415,7 @@ export function CommunityBullModal({
               disabled={
                 busy ||
                 success ||
+                checkingExisting ||
                 !turnstileToken ||
                 !TURNSTILE_SITE_KEY
               }
@@ -358,7 +438,8 @@ export function CommunityBullModal({
             </p>
           )}
 
-          {success && (
+          {success &&
+            existingStatus !== "verified" && (
             <div className="community-verify-panel">
               <strong>
                 Want to make it a verified bull?

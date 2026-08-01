@@ -231,7 +231,7 @@ export function LandingPage() {
             <Stat
               value={stats.mappedHolders.toLocaleString("en-US")}
               label="MAPPED BULLS"
-              note="community + verified"
+              note="includes verified holders"
             />
             <Stat
               value={stats.verifiedHolders.toLocaleString("en-US")}

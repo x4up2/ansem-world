@@ -15,6 +15,9 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 const COOKIE_NAME = "ansem_community_id";
+const UUID_RE =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
 const MAX_ADDITIONS_PER_IP_PER_DAY = 3;
 const COUNTRY_HOURLY_REVIEW_THRESHOLD = 10;
 
@@ -118,6 +121,102 @@ async function validateTurnstile(
   ) as TurnstileResult;
 }
 
+export async function GET(
+  request: NextRequest
+) {
+  const hmacSecret =
+    process.env.COMMUNITY_BULL_HMAC_SECRET;
+
+  if (!hmacSecret) {
+    return jsonError(
+      "Community participation is temporarily unavailable.",
+      503
+    );
+  }
+
+  const browserId =
+    request.cookies.get(COOKIE_NAME)?.value;
+
+  if (
+    !browserId ||
+    !UUID_RE.test(browserId)
+  ) {
+    return NextResponse.json(
+      {
+        ok: true,
+        existing: false
+      },
+      {
+        headers: {
+          "Cache-Control": "no-store"
+        }
+      }
+    );
+  }
+
+  const browserHash = createHash(
+    `browser:${browserId}`,
+    hmacSecret
+  );
+
+  const {
+    data: existingBull,
+    error
+  } = await supabaseAdmin
+    .from("community_bulls")
+    .select(
+      "country_code, status, created_at, verified_at"
+    )
+    .eq("browser_hash", browserHash)
+    .neq("status", "removed")
+    .maybeSingle();
+
+  if (error) {
+    console.error(
+      "Community bull lookup failed:",
+      error
+    );
+
+    return jsonError(
+      "Unable to load your existing bull.",
+      500
+    );
+  }
+
+  if (!existingBull) {
+    return NextResponse.json(
+      {
+        ok: true,
+        existing: false
+      },
+      {
+        headers: {
+          "Cache-Control": "no-store"
+        }
+      }
+    );
+  }
+
+  return NextResponse.json(
+    {
+      ok: true,
+      existing: true,
+      countryCode:
+        existingBull.country_code,
+      status:
+        existingBull.status,
+      canVerify:
+        existingBull.status === "active" ||
+        existingBull.status === "pending"
+    },
+    {
+      headers: {
+        "Cache-Control": "no-store"
+      }
+    }
+  );
+}
+
 export async function POST(
   request: NextRequest
 ) {
@@ -219,7 +318,7 @@ export async function POST(
 
   const browserId =
     existingBrowserId &&
-    /^[0-9a-f-]{36}$/i.test(
+    UUID_RE.test(
       existingBrowserId
     )
       ? existingBrowserId
