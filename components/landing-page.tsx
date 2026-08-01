@@ -62,13 +62,7 @@ export function LandingPage({
 
       setClaimOpen(true);
 
-      if (initialVerificationToken) {
-        window.history.replaceState(
-          {},
-          "",
-          "/"
-        );
-      } else {
+      if (!initialVerificationToken) {
         url.searchParams.delete(
           "verify_token"
         );
