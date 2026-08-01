@@ -36,10 +36,44 @@ export function LandingPage() {
   const [communityOpen, setCommunityOpen] = useState(false);
   const [verifyCountry, setVerifyCountry] =
     useState<string | null>(null);
+
+  const [
+    verificationToken,
+    setVerificationToken
+  ] = useState<string | null>(null);
+
   const [stats, setStats] = useState(initialStats);
 
   useEffect(() => {
     const url = new URL(window.location.href);
+
+    const mobileVerificationToken =
+      url.searchParams.get("verify_token");
+
+    if (mobileVerificationToken) {
+      setVerificationToken(
+        mobileVerificationToken
+      );
+
+      setClaimOpen(true);
+
+      url.searchParams.delete(
+        "verify_token"
+      );
+
+      url.searchParams.delete("join");
+
+      const cleanUrl =
+        `${url.pathname}${url.search}${url.hash}`;
+
+      window.history.replaceState(
+        {},
+        "",
+        cleanUrl
+      );
+
+      return;
+    }
 
     if (url.searchParams.get("join") === "1") {
       setClaimOpen(true);
@@ -48,7 +82,11 @@ export function LandingPage() {
       const cleanUrl =
         `${url.pathname}${url.search}${url.hash}`;
 
-      window.history.replaceState({}, "", cleanUrl);
+      window.history.replaceState(
+        {},
+        "",
+        cleanUrl
+      );
     }
   }, []);
 
@@ -316,6 +354,7 @@ export function LandingPage() {
         onClose={() => setCommunityOpen(false)}
         onVerify={(countryCode) => {
           setVerifyCountry(countryCode);
+          setVerificationToken(null);
           setCommunityOpen(false);
           setClaimOpen(true);
         }}
@@ -323,10 +362,16 @@ export function LandingPage() {
 
       <ClaimModal
         open={claimOpen}
-        initialCountry={verifyCountry ?? undefined}
+        initialCountry={
+          verifyCountry ?? undefined
+        }
+        verificationToken={
+          verificationToken ?? undefined
+        }
         onClose={() => {
           setClaimOpen(false);
           setVerifyCountry(null);
+          setVerificationToken(null);
         }}
       />
     </main>

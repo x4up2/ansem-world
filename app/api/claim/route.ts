@@ -1,4 +1,7 @@
-import { createHmac } from "node:crypto";
+import {
+  createHash,
+  createHmac
+} from "node:crypto";
 
 import { NextRequest, NextResponse } from "next/server";
 import bs58 from "bs58";
@@ -19,12 +22,16 @@ const WALLET_RE = /^[1-9A-HJ-NP-Za-km-z]{32,44}$/;
 const UUID_RE =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
+const VERIFICATION_TOKEN_RE =
+  /^[0-9a-f]{64}$/i;
+
 type ClaimBody = {
   nonce?: unknown;
   wallet?: unknown;
   countryCode?: unknown;
   message?: unknown;
   signature?: unknown;
+  verificationToken?: unknown;
 };
 
 type TokenAccount = {
@@ -162,6 +169,11 @@ export async function POST(request: NextRequest) {
       ? body.message
       : "";
 
+  const verificationToken =
+    typeof body.verificationToken === "string"
+      ? body.verificationToken.trim()
+      : "";
+
   const signature = body.signature;
 
   if (!UUID_RE.test(nonce)) {
@@ -185,6 +197,18 @@ export async function POST(request: NextRequest) {
   if (message.length === 0 || message.length > 2000) {
     return errorResponse(
       "Invalid signing message.",
+      400
+    );
+  }
+
+  if (
+    verificationToken &&
+    !VERIFICATION_TOKEN_RE.test(
+      verificationToken
+    )
+  ) {
+    return errorResponse(
+      "Invalid mobile verification token.",
       400
     );
   }
@@ -288,6 +312,127 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  let handoffCommunityBullId:
+    string | null = null;
+
+  let handoffTokenHash:
+    string | null = null;
+
+  if (verificationToken) {
+    handoffTokenHash = createHash("sha256")
+      .update(verificationToken)
+      .digest("hex");
+
+    const {
+      data: verificationTokenRow,
+      error: verificationTokenError
+    } = await supabaseAdmin
+      .from(
+        "community_bull_verification_tokens"
+      )
+      .select(
+        "community_bull_id, expires_at, used_at"
+      )
+      .eq(
+        "token_hash",
+        handoffTokenHash
+      )
+      .maybeSingle();
+
+    if (verificationTokenError) {
+      console.error(
+        "Mobile verification token lookup failed:",
+        verificationTokenError
+      );
+
+      return errorResponse(
+        "Unable to validate the mobile verification link.",
+        500
+      );
+    }
+
+    if (!verificationTokenRow) {
+      return errorResponse(
+        "The mobile verification link was not found.",
+        404
+      );
+    }
+
+    if (verificationTokenRow.used_at) {
+      return errorResponse(
+        "This mobile verification link has already been used.",
+        409
+      );
+    }
+
+    if (
+      new Date(
+        verificationTokenRow.expires_at
+      ).getTime() <= Date.now()
+    ) {
+      return errorResponse(
+        "This mobile verification link has expired. Please return to your original browser and try again.",
+        410
+      );
+    }
+
+    const {
+      data: handoffBull,
+      error: handoffBullError
+    } = await supabaseAdmin
+      .from("community_bulls")
+      .select("id, country_code, status")
+      .eq(
+        "id",
+        verificationTokenRow.community_bull_id
+      )
+      .maybeSingle();
+
+    if (handoffBullError) {
+      console.error(
+        "Mobile verification bull lookup failed:",
+        handoffBullError
+      );
+
+      return errorResponse(
+        "Unable to validate the associated community bull.",
+        500
+      );
+    }
+
+    if (!handoffBull) {
+      return errorResponse(
+        "The associated community bull no longer exists.",
+        404
+      );
+    }
+
+    if (
+      handoffBull.country_code !==
+      countryCode
+    ) {
+      return errorResponse(
+        "The mobile verification link does not match the selected country.",
+        400
+      );
+    }
+
+    if (
+      handoffBull.status !== "active" &&
+      handoffBull.status !== "pending"
+    ) {
+      return errorResponse(
+        handoffBull.status === "verified"
+          ? "Your bull is already verified."
+          : "This community bull cannot currently be verified.",
+        409
+      );
+    }
+
+    handoffCommunityBullId =
+      handoffBull.id;
+  }
+
   let balanceResult: {
     balanceRaw: bigint;
     slot: number | null;
@@ -339,39 +484,35 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const hmacSecret =
-    process.env.COMMUNITY_BULL_HMAC_SECRET;
-
-  const browserId =
-    request.cookies.get("ansem_community_id")?.value;
-
   if (
-    hmacSecret &&
-    browserId &&
-    UUID_RE.test(browserId)
+    handoffCommunityBullId &&
+    handoffTokenHash
   ) {
-    const browserHash = createHmac(
-      "sha256",
-      hmacSecret
-    )
-      .update(`browser:${browserId}`)
-      .digest("hex");
+    const {
+      data: upgradedBull,
+      error: communityBullError
+    } = await supabaseAdmin
+      .from("community_bulls")
+      .update({
+        status: "verified",
+        verified_at: verifiedAt,
+        updated_at: verifiedAt
+      })
+      .eq(
+        "id",
+        handoffCommunityBullId
+      )
+      .eq("country_code", countryCode)
+      .in("status", ["active", "pending"])
+      .select("id")
+      .maybeSingle();
 
-    const { error: communityBullError } =
-      await supabaseAdmin
-        .from("community_bulls")
-        .update({
-          status: "verified",
-          verified_at: verifiedAt,
-          updated_at: verifiedAt
-        })
-        .eq("browser_hash", browserHash)
-        .eq("country_code", countryCode)
-        .in("status", ["active", "pending"]);
-
-    if (communityBullError) {
+    if (
+      communityBullError ||
+      !upgradedBull
+    ) {
       console.error(
-        "Community bull verification upgrade failed:",
+        "Mobile community bull upgrade failed:",
         communityBullError
       );
 
@@ -379,6 +520,93 @@ export async function POST(request: NextRequest) {
         "Your wallet was verified, but your community bull could not be upgraded.",
         500
       );
+    }
+
+    const {
+      data: consumedToken,
+      error: tokenConsumeError
+    } = await supabaseAdmin
+      .from(
+        "community_bull_verification_tokens"
+      )
+      .update({
+        used_at: verifiedAt
+      })
+      .eq(
+        "token_hash",
+        handoffTokenHash
+      )
+      .is("used_at", null)
+      .select("token_hash")
+      .maybeSingle();
+
+    if (
+      tokenConsumeError ||
+      !consumedToken
+    ) {
+      console.error(
+        "Mobile verification token consumption failed:",
+        tokenConsumeError
+      );
+
+      return errorResponse(
+        "Your bull was verified, but the mobile verification link could not be closed.",
+        500
+      );
+    }
+  } else {
+    const hmacSecret =
+      process.env.COMMUNITY_BULL_HMAC_SECRET;
+
+    const browserId =
+      request.cookies.get(
+        "ansem_community_id"
+      )?.value;
+
+    if (
+      hmacSecret &&
+      browserId &&
+      UUID_RE.test(browserId)
+    ) {
+      const browserHash = createHmac(
+        "sha256",
+        hmacSecret
+      )
+        .update(`browser:${browserId}`)
+        .digest("hex");
+
+      const { error: communityBullError } =
+        await supabaseAdmin
+          .from("community_bulls")
+          .update({
+            status: "verified",
+            verified_at: verifiedAt,
+            updated_at: verifiedAt
+          })
+          .eq(
+            "browser_hash",
+            browserHash
+          )
+          .eq(
+            "country_code",
+            countryCode
+          )
+          .in(
+            "status",
+            ["active", "pending"]
+          );
+
+      if (communityBullError) {
+        console.error(
+          "Community bull verification upgrade failed:",
+          communityBullError
+        );
+
+        return errorResponse(
+          "Your wallet was verified, but your community bull could not be upgraded.",
+          500
+        );
+      }
     }
   }
 
