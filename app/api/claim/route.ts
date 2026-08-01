@@ -1,3 +1,5 @@
+import { createHmac } from "node:crypto";
+
 import { NextRequest, NextResponse } from "next/server";
 import bs58 from "bs58";
 import nacl from "tweetnacl";
@@ -337,6 +339,49 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  const hmacSecret =
+    process.env.COMMUNITY_BULL_HMAC_SECRET;
+
+  const browserId =
+    request.cookies.get("ansem_community_id")?.value;
+
+  if (
+    hmacSecret &&
+    browserId &&
+    UUID_RE.test(browserId)
+  ) {
+    const browserHash = createHmac(
+      "sha256",
+      hmacSecret
+    )
+      .update(`browser:${browserId}`)
+      .digest("hex");
+
+    const { error: communityBullError } =
+      await supabaseAdmin
+        .from("community_bulls")
+        .update({
+          status: "verified",
+          verified_at: verifiedAt,
+          updated_at: verifiedAt
+        })
+        .eq("browser_hash", browserHash)
+        .eq("country_code", countryCode)
+        .in("status", ["active", "pending"]);
+
+    if (communityBullError) {
+      console.error(
+        "Community bull verification upgrade failed:",
+        communityBullError
+      );
+
+      return errorResponse(
+        "Your wallet was verified, but your community bull could not be upgraded.",
+        500
+      );
+    }
+  }
+
   const {
     data: consumedNonce,
     error: consumeError
@@ -369,7 +414,7 @@ export async function POST(request: NextRequest) {
   return NextResponse.json(
     {
       ok: true,
-      message: "Wallet verified. You have joined your country’s herd.",
+      message: "Wallet verified. Your bull is now a verified holder.",
       countryCode,
       balanceRaw: balanceResult.balanceRaw.toString(),
       verifiedSlot: balanceResult.slot

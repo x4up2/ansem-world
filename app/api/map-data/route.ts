@@ -10,7 +10,7 @@ import { pointOnFeature } from "@turf/point-on-feature";
 import countries2to3 from "countries-list/minimal/countries.2to3.min.json";
 
 import { COUNTRIES } from "@/lib/countries";
-import { getCountryClaimCounts } from "@/lib/country-claims";
+import { getMapCountryCounts } from "@/lib/country-claims";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -135,7 +135,7 @@ function getRepresentativeCountryPoint(
 export async function GET() {
   try {
     const [claimCounts, rawWorld] = await Promise.all([
-      getCountryClaimCounts(),
+      getMapCountryCounts(),
 
       readFile(
         path.join(
@@ -180,6 +180,8 @@ export async function GET() {
         countryCode: string;
         country: string;
         claims: number;
+        communityBulls: number;
+        verifiedBulls: number;
       }
     >[] = [];
 
@@ -220,7 +222,11 @@ export async function GET() {
             countryFeature.properties?.name ??
             claimCount.countryCode,
 
-          claims: claimCount.claims
+          claims: claimCount.claims,
+          communityBulls:
+            claimCount.communityBulls,
+          verifiedBulls:
+            claimCount.verifiedBulls
         }
       });
     }
@@ -231,6 +237,20 @@ export async function GET() {
       0
     );
 
+    const totalCommunityBulls =
+      claimCounts.reduce(
+        (total, country) =>
+          total + country.communityBulls,
+        0
+      );
+
+    const totalVerifiedBulls =
+      claimCounts.reduce(
+        (total, country) =>
+          total + country.verifiedBulls,
+        0
+      );
+
     return NextResponse.json(
       {
         ok: true,
@@ -239,6 +259,8 @@ export async function GET() {
         countries: features.length,
         unmappedClaims,
         unmappedCountryCodes,
+        totalCommunityBulls,
+        totalVerifiedBulls,
         data: {
           type: "FeatureCollection",
           features
@@ -259,7 +281,7 @@ export async function GET() {
     return NextResponse.json(
       {
         ok: false,
-        error: "Unable to load verified map claims."
+        error: "Unable to load community map data."
       },
       {
         status: 500,

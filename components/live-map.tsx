@@ -21,6 +21,8 @@ type BubbleProperties = {
   countryCode: string;
   country: string;
   claims: number;
+  communityBulls: number;
+  verifiedBulls: number;
 };
 
 type MapDataResponse = {
@@ -30,6 +32,8 @@ type MapDataResponse = {
   mappedClaims?: number;
   countries?: number;
   unmappedClaims?: number;
+  totalCommunityBulls?: number;
+  totalVerifiedBulls?: number;
   data?: GeoJSON.FeatureCollection<
     GeoJSON.Point,
     BubbleProperties
@@ -117,6 +121,8 @@ export function LiveMap() {
 
   const [summary, setSummary] = useState({
     totalClaims: 0,
+    communityBulls: 0,
+    verifiedBulls: 0,
     countries: 0
   });
 
@@ -157,6 +163,10 @@ export function LiveMap() {
 
         setSummary({
           totalClaims: body.mappedClaims ?? 0,
+          communityBulls:
+            body.totalCommunityBulls ?? 0,
+          verifiedBulls:
+            body.totalVerifiedBulls ?? 0,
           countries: body.countries ?? 0
         });
 
@@ -443,6 +453,10 @@ export function LiveMap() {
             feature.properties?.claims ?? 0
           );
 
+          const verifiedBulls = Number(
+            feature.properties?.verifiedBulls ?? 0
+          );
+
           const popupContent =
             document.createElement("div");
 
@@ -455,8 +469,12 @@ export function LiveMap() {
             document.createElement("span");
 
           detail.textContent =
-            `${claims.toLocaleString()} verified ` +
-            `${claims === 1 ? "bull" : "bulls"}`;
+            `${claims.toLocaleString()} ` +
+            `${claims === 1 ? "bull" : "bulls"}, including ` +
+            `${verifiedBulls.toLocaleString()} ` +
+            `${verifiedBulls === 1
+              ? "verified holder"
+              : "verified holders"}`;
 
           popupContent.append(title, detail);
 
@@ -570,7 +588,7 @@ export function LiveMap() {
           width: "100%",
           height: "100%"
         }}
-        aria-label="Verified ANSEM claims grouped by country"
+        aria-label="ANSEM community bulls grouped by country"
       />
 
       {status === "loading" && (
@@ -592,22 +610,26 @@ export function LiveMap() {
       <div className="map-vignette" />
 
       <div className="map-live-badge">
-        <span /> VERIFIED COMMUNITY MAP
+        <span /> COMMUNITY MAP
       </div>
 
       <div className="map-legend">
         {dataError
-          ? "CLAIM DATA UNAVAILABLE"
+          ? "MAP DATA UNAVAILABLE"
           : summary.totalClaims === 0
-            ? "NO VERIFIED HOLDERS MAPPED YET"
+            ? "NO BULLS MAPPED YET"
             : `${summary.countries} ${
                 summary.countries === 1
                   ? "COUNTRY"
                   : "COUNTRIES"
-              } · ${summary.totalClaims.toLocaleString()} VERIFIED ${
+              } · ${summary.totalClaims.toLocaleString()} ${
                 summary.totalClaims === 1
                   ? "BULL"
                   : "BULLS"
+              } · ${summary.verifiedBulls.toLocaleString()} ${
+                summary.verifiedBulls === 1
+                  ? "VERIFIED HOLDER"
+                  : "VERIFIED HOLDERS"
               }`}
       </div>
     </div>
