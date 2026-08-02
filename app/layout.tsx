@@ -12,15 +12,15 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary",
     title: "ANSEM WORLD — The Global $ANSEM Herd",
-    description: "Track the global $ANSEM community by country on Solana.",
+    description: "Map the global $ANSEM herd by country. Add one community bull without connecting a wallet; Phantom holder verification is optional.",
     images: ["/ansem-bull.png"],
   },
   title: "ANSEM WORLD — Live global herd",
-  description: "A live community map for holders of $ANSEM on Solana.",
+  description: "Map the global $ANSEM herd by country. Add one community bull without connecting a wallet; Phantom holder verification is optional.",
   icons: { icon: "/ansem-bull.png", apple: "/ansem-bull.png" },
   openGraph: {
     title: "ANSEM WORLD",
-    description: "Track the herd. Claim your place.",
+    description: "Map the global $ANSEM herd by country. Add one community bull without connecting a wallet; Phantom holder verification is optional.",
     images: ["/ansem-bull.png"]
   }
 };
