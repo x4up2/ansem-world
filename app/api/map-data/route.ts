@@ -105,6 +105,17 @@ function getLargestLandPolygon(
   return largestPolygon;
 }
 
+/*
+ * Manual marker positions for countries whose calculated
+ * center is visually too close to a border or coastline.
+ *
+ * GeoJSON coordinates use [longitude, latitude].
+ */
+const COUNTRY_POINT_OVERRIDES:
+  Partial<Record<string, [number, number]>> = {
+    GB: [-1.5, 52.7]
+  };
+
 function getRepresentativeCountryPoint(
   feature: CountryFeature
 ): GeoJSON.Feature<GeoJSON.Point> {
@@ -205,10 +216,26 @@ export async function GET() {
         continue;
       }
 
-      const representativePoint =
-        getRepresentativeCountryPoint(
-          countryFeature
-        );
+      const overriddenCoordinates =
+        COUNTRY_POINT_OVERRIDES[
+          claimCount.countryCode
+        ];
+
+      const representativePoint:
+        GeoJSON.Feature<GeoJSON.Point> =
+          overriddenCoordinates
+            ? {
+                type: "Feature",
+                geometry: {
+                  type: "Point",
+                  coordinates:
+                    overriddenCoordinates
+                },
+                properties: {}
+              }
+            : getRepresentativeCountryPoint(
+                countryFeature
+              );
 
       features.push({
         type: "Feature",
