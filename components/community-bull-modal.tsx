@@ -51,8 +51,6 @@ type CommunityBullResponse = {
 const TURNSTILE_SITE_KEY =
   process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? "";
 
-const DAILY_LIMIT_MESSAGE =
-  "The daily participation limit has been reached for this network.";
 
 export function CommunityBullModal({
   open,
@@ -71,6 +69,9 @@ export function CommunityBullModal({
   const [checkingExisting, setCheckingExisting] =
     useState(false);
   const [status, setStatus] =
+    useState<string | null>(null);
+
+  const [submitError, setSubmitError] =
     useState<string | null>(null);
 
   const [turnstileReady, setTurnstileReady] =
@@ -104,6 +105,7 @@ export function CommunityBullModal({
     setSuccess(false);
     setExistingStatus(null);
     setStatus(null);
+    setSubmitError(null);
     setTurnstileToken("");
     setCheckingExisting(true);
 
@@ -183,11 +185,7 @@ export function CommunityBullModal({
 
         callback(token) {
           setTurnstileToken(token);
-          setStatus((current) =>
-            current === DAILY_LIMIT_MESSAGE
-              ? current
-              : null
-          );
+          setStatus(null);
         },
 
         "expired-callback"() {
@@ -248,13 +246,15 @@ export function CommunityBullModal({
     event.preventDefault();
 
     if (!turnstileToken) {
-      setStatus(
+      setStatus(null);
+      setSubmitError(
         "Please complete the human verification."
       );
       return;
     }
 
     setBusy(true);
+    setSubmitError(null);
     setStatus("Adding your bull…");
 
     try {
@@ -296,7 +296,8 @@ export function CommunityBullModal({
       );
     } catch (error) {
       setSuccess(false);
-      setStatus(
+      setStatus(null);
+      setSubmitError(
         error instanceof Error
           ? error.message
           : "Your bull could not be added."
@@ -442,6 +443,17 @@ export function CommunityBullModal({
               aria-live="polite"
             >
               {status}
+            </p>
+          )}
+
+          {submitError && (
+            <p
+              className="claim-status"
+              role="alert"
+              aria-live="assertive"
+              aria-atomic="true"
+            >
+              {submitError}
             </p>
           )}
 
