@@ -447,14 +447,15 @@ export function CommunityBullModal({
           )}
 
           {submitError && (
-            <p
-              className="claim-status"
+            <div
+              className="claim-error"
               role="alert"
               aria-live="assertive"
               aria-atomic="true"
             >
-              {submitError}
-            </p>
+              <strong>COULD NOT ADD YOUR BULL</strong>
+              <span>{submitError}</span>
+            </div>
           )}
 
           {success &&

@@ -101,6 +101,31 @@ footer { padding: 35px 5vw; display: flex; align-items: center; justify-content:
 .full { width: 100%; }
 .claim-status { margin: 16px 0 0; color: #b5c0b6; font-size: 11px; line-height: 1.55; }
 
+.claim-error {
+  margin: 16px 0 0;
+  padding: 13px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  background: rgba(255, 88, 88, 0.08);
+  border: 1px solid rgba(255, 110, 110, 0.32);
+  border-left: 3px solid #ff6b6b;
+  box-shadow: 0 0 28px rgba(255, 80, 80, 0.06);
+}
+
+.claim-error strong {
+  color: #ffaaaa;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+}
+
+.claim-error span {
+  color: #f2d7d7;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
 @keyframes pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: .45; transform: scale(.78); } }
 @keyframes aura { 0%,100% { transform: scale(.96); opacity: .7; } 50% { transform: scale(1.06); opacity: 1; } }
 
