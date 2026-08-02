@@ -51,6 +51,9 @@ type CommunityBullResponse = {
 const TURNSTILE_SITE_KEY =
   process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? "";
 
+const DAILY_LIMIT_MESSAGE =
+  "The daily participation limit has been reached for this network.";
+
 export function CommunityBullModal({
   open,
   onClose,
@@ -180,7 +183,11 @@ export function CommunityBullModal({
 
         callback(token) {
           setTurnstileToken(token);
-          setStatus(null);
+          setStatus((current) =>
+            current === DAILY_LIMIT_MESSAGE
+              ? current
+              : null
+          );
         },
 
         "expired-callback"() {
