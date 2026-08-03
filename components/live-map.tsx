@@ -295,8 +295,9 @@ export function LiveMap() {
 
         paint: {
           /*
-           * Radius follows sqrt(claims), so the
-           * visible area follows the claim count.
+           * Explicit claim-count stops keep single
+           * bulls discreet while preserving a broad
+           * visual scale for larger local herds.
            */
           "circle-radius": [
             "interpolate",
@@ -305,46 +306,36 @@ export function LiveMap() {
 
             1,
             [
-              "min",
-              38,
+              "interpolate",
+              ["linear"],
               [
-                "max",
-                9,
-                [
-                  "*",
-                  7,
-                  [
-                    "sqrt",
-                    [
-                      "to-number",
-                      ["get", "claims"],
-                      1
-                    ]
-                  ]
-                ]
-              ]
+                "to-number",
+                ["get", "claims"],
+                1
+              ],
+              1, 6,
+              2, 8.5,
+              5, 15,
+              10, 22,
+              25, 35,
+              50, 38
             ],
 
             6,
             [
-              "min",
-              62,
+              "interpolate",
+              ["linear"],
               [
-                "max",
-                15,
-                [
-                  "*",
-                  11,
-                  [
-                    "sqrt",
-                    [
-                      "to-number",
-                      ["get", "claims"],
-                      1
-                    ]
-                  ]
-                ]
-              ]
+                "to-number",
+                ["get", "claims"],
+                1
+              ],
+              1, 9,
+              2, 13,
+              5, 24,
+              10, 35,
+              25, 55,
+              50, 62
             ]
           ],
 
@@ -368,46 +359,36 @@ export function LiveMap() {
 
             1,
             [
-              "min",
-              25,
+              "interpolate",
+              ["linear"],
               [
-                "max",
-                4,
-                [
-                  "*",
-                  4,
-                  [
-                    "sqrt",
-                    [
-                      "to-number",
-                      ["get", "claims"],
-                      1
-                    ]
-                  ]
-                ]
-              ]
+                "to-number",
+                ["get", "claims"],
+                1
+              ],
+              1, 3,
+              2, 4.5,
+              5, 9,
+              10, 13,
+              25, 20,
+              50, 25
             ],
 
             6,
             [
-              "min",
-              42,
+              "interpolate",
+              ["linear"],
               [
-                "max",
-                7,
-                [
-                  "*",
-                  6.5,
-                  [
-                    "sqrt",
-                    [
-                      "to-number",
-                      ["get", "claims"],
-                      1
-                    ]
-                  ]
-                ]
-              ]
+                "to-number",
+                ["get", "claims"],
+                1
+              ],
+              1, 5,
+              2, 7.5,
+              5, 14,
+              10, 21,
+              25, 33,
+              50, 42
             ]
           ],
 
