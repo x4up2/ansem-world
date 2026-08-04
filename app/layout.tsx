@@ -17,7 +17,6 @@ export const metadata: Metadata = {
   },
   title: "ANSEM WORLD — Live global herd",
   description: "Map the global $ANSEM herd by country. Add one community bull without connecting a wallet; Phantom holder verification is optional.",
-  icons: { icon: "/ansem-bull.png", apple: "/ansem-bull.png" },
   openGraph: {
     title: "ANSEM WORLD",
     description: "Map the global $ANSEM herd by country. Add one community bull without connecting a wallet; Phantom holder verification is optional.",
